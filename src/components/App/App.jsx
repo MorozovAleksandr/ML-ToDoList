@@ -41,11 +41,13 @@ class App extends React.Component {
         return (
             <div className='wrapper'>
                 <SignIn />
-                <Lists cbUpdateActiveTodoListId={this.updateActiveTodoListId} lists={this.state.lists} />
-                {
-                    this.state.activeToDoListId &&
-                    <ToDoList activeToDoList={this.state.lists.find(item => item.id === this.state.activeToDoListId)} />
-                }
+                <div className="content">
+                    <Lists cbUpdateActiveTodoListId={this.updateActiveTodoListId} lists={this.state.lists} />
+                    {
+                        this.state.activeToDoListId &&
+                        <ToDoList activeToDoList={this.state.lists.find(item => item.id === this.state.activeToDoListId)} />
+                    }
+                </div>
             </div>
         )
     };

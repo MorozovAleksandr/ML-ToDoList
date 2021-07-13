@@ -1,6 +1,7 @@
 import React from "react";
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import './Lists.css'
 
 class Lists extends React.Component {
 
@@ -17,7 +18,7 @@ class Lists extends React.Component {
             )
         })
         return (
-            <div>
+            <div className="lists">
                 <h1>Списки:</h1>
                 {myLists}
             </div>

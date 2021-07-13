@@ -1,9 +1,10 @@
 import React from "react";
+import './ToDoList.css'
 
 class ToDoList extends React.Component {
     render() {
         return (
-            <h1>
+            <h1 className="todo">
                 ToDo List {
                     this.props.activeToDoList &&
                     this.props.activeToDoList.name
