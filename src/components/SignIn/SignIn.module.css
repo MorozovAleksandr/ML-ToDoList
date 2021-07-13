@@ -1,0 +1,8 @@
+.signInWrapper {
+    position: absolute;
+    right: 20px;
+}
+
+.signInButton {
+    margin: 0 5px !important;
+}

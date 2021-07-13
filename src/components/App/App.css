@@ -1,0 +1,15 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    box-sizing: border-box;
+    background-color: #212121;
+    color: #fff;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
