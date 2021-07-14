@@ -17,10 +17,13 @@ class AddToDoItem extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        this.props.cbAddItem(this.state.label);
-        this.setState({
-            label: ''
-        });
+        if (this.state.label) {
+            this.props.cbAddItem(this.state.label);
+            this.setState({
+                label: ''
+            });
+        }
+
     }
 
     render() {
