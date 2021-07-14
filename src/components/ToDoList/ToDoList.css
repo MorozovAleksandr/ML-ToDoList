@@ -1,3 +1,11 @@
-.todo {
+.todolist {
+    position: relative;
+}
+
+.todolist__name {
+    padding: 20px;
+}
+
+.todolist__list {
     padding: 20px;
 }

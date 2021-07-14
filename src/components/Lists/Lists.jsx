@@ -13,10 +13,10 @@ class Lists extends React.Component {
         const myLists = this.props.lists.map(item => {
             return (
                 <ListItem onClick={() => { this.updateActiveTodoListId(item.id) }} key={item.id} button>
-                    <ListItemText primary={item.name} />
+                    <ListItemText primary={item.label} />
                 </ListItem>
             )
-        })
+        });
         return (
             <div className="lists">
                 <h1>Списки:</h1>

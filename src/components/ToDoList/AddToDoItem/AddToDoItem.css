@@ -1,0 +1,29 @@
+.addToDoItem {
+    display: flex;
+    align-items: flex-end;
+    position: absolute;
+    bottom: 40%;
+    left: 20px;
+}
+
+.addToDoItem__input {
+    width: 500px;
+    margin-right: 10px !important;
+}
+
+label.Mui-focused {
+    color: white !important;
+}
+
+.MuiInput-underline:after,
+.MuiInput-underline:before {
+    border-bottom-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.MuiInputBase-input {
+    color: white !important;
+}
+
+.MuiFormLabel-root {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
