@@ -2,12 +2,13 @@
     display: flex;
     align-items: flex-end;
     position: absolute;
-    bottom: 40%;
-    left: 20px;
+    bottom: 0;
+    padding: 20px;
+    width: calc(100% - 42px);
 }
 
 .addToDoItem__input {
-    width: 500px;
+    width: calc(100% - 115px);
     margin-right: 10px !important;
 }
 

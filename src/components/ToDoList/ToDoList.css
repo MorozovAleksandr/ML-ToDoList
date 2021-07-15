@@ -4,6 +4,7 @@
 
 .todolist__name {
     padding: 20px;
+    margin: 0;
 }
 
 .todolist__list {

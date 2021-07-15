@@ -1,62 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './ToDoList.css'
 import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
+import crypto from "crypto";
 
-class ToDoList extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.toDoListTaskId = 0;
-        this.state = {
-            toDoList: this.props.activeToDoList.toDoList.map(item => this.createTodoItem(item.label))
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.activeToDoList !== prevProps.activeToDoList) {
-            this.setState(({ toDoList }) => {
-                return {
-                    toDoList: this.props.activeToDoList.toDoList.map(item => this.createTodoItem(item.label))
-                }
-            })
-        }
-    }
-
-    createTodoItem = (label) => {
+function ToDoList(props) {
+    const createTodoItem = (label) => {
         return {
             label: label,
             important: false,
             done: false,
-            id: this.toDoListTaskId++
+            id: crypto.randomBytes(2).toString("hex")
         }
+    };
+
+    const [toDoList, setToDoList] = useState([...props.activeToDoList.toDoList]);
+
+    useEffect(() => {
+        setToDoList([...props.activeToDoList.toDoList]);
+    }, [props.activeToDoList]);
+
+    const addItem = (item) => {
+        const newtoDoList = [...toDoList, createTodoItem(item)];
+        props.cbUpdateToDoList(newtoDoList);
     }
 
-    addItem = (item) => {
-        const newtoDoList = [...this.state.toDoList, this.createTodoItem(item)];
-        this.props.cbUpdateToDoList(newtoDoList);
+    const deleteItem = (id) => {
+        const idx = toDoList.findIndex(item => item.id === id);
+        const before = toDoList.slice(0, idx);
+        const after = toDoList.slice(idx + 1);
+        const newtoDoList = [...before, ...after];
+        props.cbUpdateToDoList(newtoDoList);
     }
+    const elements = toDoList.map(item => <ToDoListItem cbDeleteItem={deleteItem} key={item.id} item={item} />);
 
-    render() {
-        const elements = this.state.toDoList.map(item => {
-            return (
-                <ToDoListItem key={item.id} item={item} />
-            )
-        })
-        return (
-            <div className="todolist">
-                <h1 className="todolist__name">
-                    ToDo List {
-                        this.props.activeToDoList.label
-                    }
-                </h1>
-                <div className="todolist__list">
-                    {elements}
-                </div>
-                <AddToDoItem cbAddItem={this.addItem} />
+    return (
+        <div className="todolist">
+            <h1 className="todolist__name">
+                {props.activeToDoList.label}
+            </h1>
+            <div className="todolist__list">
+                {elements}
             </div>
-        );
-    }
+            <AddToDoItem cbAddItem={addItem} />
+        </div>
+    )
 }
 
 export default ToDoList;

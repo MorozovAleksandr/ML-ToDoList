@@ -1,0 +1,11 @@
+.ToDoListItem {
+    background-color: #424242;
+    background-color: rgba(75, 75, 75, 0.5);
+    padding-left: 12px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3px;
+    border-radius: 3px;
+}

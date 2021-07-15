@@ -1,41 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from '@material-ui/core/TextField';
 import './AddToDoItem.css'
 import Button from '@material-ui/core/Button';
 
-class AddToDoItem extends React.Component {
+function AddToDoItem(props) {
+    const [label, setLabel] = useState('');
 
-    state = {
-        label: ''
+    const onLabelChange = (e) => {
+        setLabel(e.target.value)
     }
 
-    onLabelChange = (e) => {
-        this.setState({
-            label: e.target.value
-        });
-    }
-
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        if (this.state.label) {
-            this.props.cbAddItem(this.state.label);
-            this.setState({
-                label: ''
-            });
+        if (label) {
+            props.cbAddItem(label);
+            setLabel('');
         }
-
     }
 
-    render() {
-        return (
-            <form className="addToDoItem" onSubmit={this.onSubmit}>
-                <TextField className="addToDoItem__input" onChange={this.onLabelChange} id="standard-basic" value={this.state.label} label="What needs to be done" />
-                <Button type='submit' variant="contained" color="primary">
-                    Add task
-                </Button>
-            </form>
-        )
-    }
+    return (
+        <form className="addToDoItem" onSubmit={onSubmit}>
+            <TextField className="addToDoItem__input" onChange={onLabelChange} id="standard-basic" value={label} label="What needs to be done" />
+            <Button type='submit' variant="contained" color="primary">
+                Add task
+            </Button>
+        </form>
+    )
 }
 
 export default AddToDoItem;

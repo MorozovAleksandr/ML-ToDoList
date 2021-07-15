@@ -2,3 +2,8 @@
     background-color: rgb(50, 50, 50);
     padding: 20px;
 }
+
+.lists__title {
+    margin: 0;
+    margin-bottom: 8px;
+}
