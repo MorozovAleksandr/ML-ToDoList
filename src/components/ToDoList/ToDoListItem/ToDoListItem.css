@@ -9,3 +9,11 @@
     margin: 3px;
     border-radius: 3px;
 }
+
+.ToDoListItem__button_marginRight {
+    margin-right: 8px;
+}
+
+.MuiIconButton-root:hover {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}

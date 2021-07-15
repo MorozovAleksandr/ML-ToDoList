@@ -3,6 +3,7 @@ import './ToDoList.css'
 import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
 import crypto from "crypto";
+import EditToDoListItem from "./EditToDoListItem/EditToDoListItem";
 
 function ToDoList(props) {
     const createTodoItem = (label) => {
@@ -16,6 +17,8 @@ function ToDoList(props) {
 
     const [toDoList, setToDoList] = useState([...props.activeToDoList.toDoList]);
 
+    const [editToDoListItemId, setEditToDoListItemId] = useState(null);
+
     useEffect(() => {
         setToDoList([...props.activeToDoList.toDoList]);
     }, [props.activeToDoList]);
@@ -25,6 +28,15 @@ function ToDoList(props) {
         props.cbUpdateToDoList(newtoDoList);
     }
 
+    const updateToDoListItem = (item, id) => {
+        const idx = toDoList.findIndex(item => item.id === id);
+        const before = toDoList.slice(0, idx);
+        const after = toDoList.slice(idx + 1);
+        const newtoDoList = [...before, item, ...after];
+        props.cbUpdateToDoList(newtoDoList);
+        setEditToDoListItemId(null);
+    }
+
     const deleteItem = (id) => {
         const idx = toDoList.findIndex(item => item.id === id);
         const before = toDoList.slice(0, idx);
@@ -32,7 +44,12 @@ function ToDoList(props) {
         const newtoDoList = [...before, ...after];
         props.cbUpdateToDoList(newtoDoList);
     }
-    const elements = toDoList.map(item => <ToDoListItem cbDeleteItem={deleteItem} key={item.id} item={item} />);
+
+    const updateEditToDoListItemId = (id) => {
+        setEditToDoListItemId(id);
+    }
+
+    const elements = toDoList.map(item => <ToDoListItem cbUpdateEditToDoListItemId={updateEditToDoListItemId} cbDeleteItem={deleteItem} key={item.id} item={item} />);
 
     return (
         <div className="todolist">
@@ -43,6 +60,11 @@ function ToDoList(props) {
                 {elements}
             </div>
             <AddToDoItem cbAddItem={addItem} />
+            {
+                editToDoListItemId &&
+                <EditToDoListItem cbUpdateEditToDoListItemId={updateEditToDoListItemId} cbUpdateToDoListItem={updateToDoListItem} activeToDoList={props.activeToDoList.label} editToDoListItem={toDoList.find(item => item.id === editToDoListItemId)} />
+            }
+
         </div>
     )
 }

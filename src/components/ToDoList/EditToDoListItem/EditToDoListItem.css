@@ -1,0 +1,11 @@
+.MuiDialog-paper {
+    background-color: rgba(50, 50, 50, 0.7) !important;
+}
+
+.MuiDialog-paperWidthSm {
+    width: 100%;
+}
+
+.EditToDoListItem__title {
+    color: white;
+}
