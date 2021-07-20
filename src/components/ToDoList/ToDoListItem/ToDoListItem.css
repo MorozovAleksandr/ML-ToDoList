@@ -10,6 +10,9 @@
     cursor: pointer;
     padding: 10px;
     font-size: 17px;
+    order: 1;
+
+    transition: color 1s, order 1.5s;
 }
 
 .ToDoListItem__button_marginRight {
@@ -49,11 +52,27 @@
     background-color: rgba(65, 65, 65, 0.4);
 }
 
-.ToDoListItem:hover .ToDoListItem__buttonDone {
+/* .ToDoListItem:hover .ToDoListItem__buttonDone {
     background-color: #3f51b5;
     border: 2px solid #3f51b5;
-}
+} */
 
 .ToDoListItem:hover .ToDoListItem__buttonDone .MuiSvgIcon-root {
+    transition: color 0.7s;
     color: white;
+}
+
+.important .MuiSvgIcon-root {
+    transition: color 1s;
+    color: gold;
+}
+
+.important_wrapper {
+    order: 0;
+    transition: order 1.5s;
+}
+
+.done {
+    order: 2;
+    transition: order 1.5s;
 }

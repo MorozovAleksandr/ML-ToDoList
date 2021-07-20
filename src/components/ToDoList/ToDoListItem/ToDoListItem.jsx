@@ -4,12 +4,18 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
+import StarIcon from '@material-ui/icons/Star';
 
 
 class ToDoListItem extends React.PureComponent {
 
     onClickDone = (e) => {
         this.props.cbTogglePropertyItem(this.props.item.id, 'done');
+    }
+
+    onClickImportant = (e) => {
+        e.stopPropagation();
+        this.props.cbTogglePropertyItem(this.props.item.id, 'important');
     }
 
     onClickEdit = (e) => {
@@ -25,7 +31,7 @@ class ToDoListItem extends React.PureComponent {
     render() {
         console.log('render task id: ' + this.props.item.id);
         return (
-            <div className={`ToDoListItem ${this.props.item.done ? `done` : ``}`} onClick={this.onClickDone} >
+            <div className={`ToDoListItem ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`} onClick={this.onClickDone} >
                 <div>
                     <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={this.onClickDone} color="inherit" aria-label="delete">
                         <CheckIcon fontSize="small" />
@@ -33,6 +39,9 @@ class ToDoListItem extends React.PureComponent {
                     {this.props.item.label}
                 </div>
                 <div className="ToDoListItem__buttons">
+                    <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${this.props.item.important ? `important` : ``}`} onClick={this.onClickImportant} color="inherit" aria-label="edit">
+                        <StarIcon fontSize="medium" />
+                    </IconButton>
                     <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={this.onClickEdit} color="inherit" aria-label="edit">
                         <EditIcon fontSize="medium" />
                     </IconButton>
