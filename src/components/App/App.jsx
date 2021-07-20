@@ -1,46 +1,62 @@
-import React, { useState } from "react";
+import React from "react";
 import Lists from "../Lists/Lists.jsx";
 import SignIn from "../SignIn/SignIn.jsx";
 import ToDoList from "../ToDoList/ToDoList.jsx";
 import "./App.css"
 import dataJson from '../../data.json';
 
-function App() {
-    let idList = 1;
-    const createTodoList = (label, list) => {
+class App extends React.PureComponent {
+
+    constructor(props) {
+        super(props);
+        this.idList = 1;
+        this.state = {
+            activeToDoListId: null,
+            lists: dataJson.lists.map(item => this.createTodoList(...item))
+        }
+    }
+
+    createTodoList = (label, list) => {
         return {
-            id: idList++,
+            id: this.idList++,
             label: label,
             toDoList: list
         }
     }
-    const [activeToDoListId, setActiveToDoListId] = useState(null);
-    const [lists, setLists] = useState(dataJson.lists.map(item => createTodoList(...item)));
 
-    const updateActiveTodoListId = (id) => {
-        setActiveToDoListId(id);
+    updateActiveTodoListId = (id) => {
+        this.setState({
+            activeToDoListId: id
+        })
     }
 
-    const updateToDoList = (toDoList) => {
-        const idx = lists.findIndex(item => item.id === activeToDoListId);
-        const before = lists.slice(0, idx);
-        const after = lists.slice(idx + 1);
-        const updateToDoList = { ...lists[idx], toDoList };
-        setLists([...before, updateToDoList, ...after]);
+    updateToDoList = (toDoList) => {
+        this.setState(({ lists }) => {
+            const idx = lists.findIndex(item => item.id === this.state.activeToDoListId);
+            const before = lists.slice(0, idx);
+            const after = lists.slice(idx + 1);
+            const updateToDoList = { ...lists[idx], toDoList };
+            return {
+                lists: [...before, updateToDoList, ...after]
+            }
+        })
     }
 
-    return (
-        <div className='wrapper'>
-            <SignIn />
-            <div className="content">
-                <Lists cbUpdateActiveTodoListId={updateActiveTodoListId} lists={lists} />
-                {
-                    activeToDoListId &&
-                    <ToDoList cbUpdateToDoList={updateToDoList} activeToDoList={lists.find(item => item.id === activeToDoListId)} />
-                }
+    render() {
+        console.log('render app');
+        return (
+            <div className='wrapper'>
+                <SignIn />
+                <div className="content">
+                    <Lists cbUpdateActiveTodoListId={this.updateActiveTodoListId} lists={this.state.lists} />
+                    {
+                        this.state.activeToDoListId &&
+                        <ToDoList cbUpdateToDoList={this.updateToDoList} activeToDoList={this.state.lists.find(item => item.id === this.state.activeToDoListId)} />
+                    }
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default App;

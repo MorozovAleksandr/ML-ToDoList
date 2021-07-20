@@ -3,21 +3,46 @@ import './ToDoListItem.css';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
+import CheckIcon from '@material-ui/icons/Check';
 
-function ToDoListItem(props) {
-    return (
-        <div className="ToDoListItem">
-            {props.item.label}
-            <div className="ToDoListItem__buttons">
-                <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={() => { props.cbUpdateEditToDoListItemId(props.item.id) }} color="inherit" aria-label="edit">
-                    <EditIcon fontSize="medium" />
-                </IconButton>
-                <IconButton className="ToDoListItem__button" onClick={() => { props.cbDeleteItem(props.item.id) }} color="inherit" aria-label="delete">
-                    <DeleteOutlinedIcon fontSize="medium" />
-                </IconButton>
+
+class ToDoListItem extends React.PureComponent {
+
+    onClickDone = (e) => {
+        this.props.cbTogglePropertyItem(this.props.item.id, 'done');
+    }
+
+    onClickEdit = (e) => {
+        e.stopPropagation();
+        this.props.cbUpdateEditToDoListItemId(this.props.item.id);
+    }
+
+    onClickDelete = (e) => {
+        e.stopPropagation();
+        this.props.cbDeleteItem(this.props.item.id);
+    }
+
+    render() {
+        console.log('render task id: ' + this.props.item.id);
+        return (
+            <div className={`ToDoListItem ${this.props.item.done ? `done` : ``}`} onClick={this.onClickDone} >
+                <div>
+                    <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={this.onClickDone} color="inherit" aria-label="delete">
+                        <CheckIcon fontSize="small" />
+                    </IconButton>
+                    {this.props.item.label}
+                </div>
+                <div className="ToDoListItem__buttons">
+                    <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={this.onClickEdit} color="inherit" aria-label="edit">
+                        <EditIcon fontSize="medium" />
+                    </IconButton>
+                    <IconButton className="ToDoListItem__button" onClick={this.onClickDelete} color="inherit" aria-label="delete">
+                        <DeleteOutlinedIcon fontSize="medium" />
+                    </IconButton>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default ToDoListItem;

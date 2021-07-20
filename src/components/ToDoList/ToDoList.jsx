@@ -1,12 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import './ToDoList.css'
 import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
 import crypto from "crypto";
 import EditToDoListItem from "./EditToDoListItem/EditToDoListItem";
 
-function ToDoList(props) {
-    const createTodoItem = (label) => {
+class ToDoList extends React.PureComponent {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            toDoList: this.props.activeToDoList.toDoList,
+            editToDoListItemId: null
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.activeToDoList !== prevProps.activeToDoList) {
+            this.setState({
+                toDoList: this.props.activeToDoList.toDoList
+            })
+        }
+    }
+
+    createTodoItem = (label) => {
         return {
             label: label,
             important: false,
@@ -15,58 +32,67 @@ function ToDoList(props) {
         }
     };
 
-    const [toDoList, setToDoList] = useState([...props.activeToDoList.toDoList]);
-
-    const [editToDoListItemId, setEditToDoListItemId] = useState(null);
-
-    useEffect(() => {
-        setToDoList([...props.activeToDoList.toDoList]);
-    }, [props.activeToDoList]);
-
-    const addItem = (item) => {
-        const newtoDoList = [...toDoList, createTodoItem(item)];
-        props.cbUpdateToDoList(newtoDoList);
+    addItem = (item) => {
+        const newtoDoList = [...this.state.toDoList, this.createTodoItem(item)];
+        this.props.cbUpdateToDoList(newtoDoList);
     }
 
-    const updateToDoListItem = (item, id) => {
-        const idx = toDoList.findIndex(item => item.id === id);
-        const before = toDoList.slice(0, idx);
-        const after = toDoList.slice(idx + 1);
+    updateToDoListItem = (item, id) => {
+        const idx = this.state.toDoList.findIndex(item => item.id === id);
+        const before = this.state.toDoList.slice(0, idx);
+        const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, item, ...after];
-        props.cbUpdateToDoList(newtoDoList);
-        setEditToDoListItemId(null);
+        this.props.cbUpdateToDoList(newtoDoList);
+        this.setState({
+            editToDoListItemId: null
+        });
     }
 
-    const deleteItem = (id) => {
-        const idx = toDoList.findIndex(item => item.id === id);
-        const before = toDoList.slice(0, idx);
-        const after = toDoList.slice(idx + 1);
+    deleteItem = (id) => {
+        const idx = this.state.toDoList.findIndex(item => item.id === id);
+        const before = this.state.toDoList.slice(0, idx);
+        const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, ...after];
-        props.cbUpdateToDoList(newtoDoList);
+        this.props.cbUpdateToDoList(newtoDoList);
     }
 
-    const updateEditToDoListItemId = (id) => {
-        setEditToDoListItemId(id);
+    togglePropertyItem = (id, property) => {
+        const idx = this.state.toDoList.findIndex(el => el.id === id);
+        const oldItem = this.state.toDoList[idx];
+        const newItem = { ...oldItem, [property]: !oldItem[property] }
+        const before = this.state.toDoList.slice(0, idx);
+        const after = this.state.toDoList.slice(idx + 1);
+        const newtoDoList = [...before, newItem, ...after];
+        this.props.cbUpdateToDoList(newtoDoList);
     }
 
-    const elements = toDoList.map(item => <ToDoListItem cbUpdateEditToDoListItemId={updateEditToDoListItemId} cbDeleteItem={deleteItem} key={item.id} item={item} />);
+    updateEditToDoListItemId = (id) => {
+        this.setState({
+            editToDoListItemId: id
+        });
+    }
 
-    return (
-        <div className="todolist">
-            <h1 className="todolist__name">
-                {props.activeToDoList.label}
-            </h1>
-            <div className="todolist__list">
-                {elements}
+
+
+    render() {
+        console.log('render ToDoList');
+        const elements = this.state.toDoList.map(item => <ToDoListItem cbTogglePropertyItem={this.togglePropertyItem} cbUpdateEditToDoListItemId={this.updateEditToDoListItemId} cbDeleteItem={this.deleteItem} key={item.id} item={item} />);
+        return (
+            <div className="todolist">
+                <h1 className="todolist__name">
+                    {this.props.activeToDoList.label}
+                </h1>
+                <div className="todolist__list">
+                    {elements}
+                </div>
+                <AddToDoItem cbAddItem={this.addItem} />
+                {
+                    this.state.editToDoListItemId &&
+                    <EditToDoListItem cbUpdateEditToDoListItemId={this.updateEditToDoListItemId} cbUpdateToDoListItem={this.updateToDoListItem} activeToDoList={this.props.activeToDoList.label} editToDoListItem={this.state.toDoList.find(item => item.id === this.state.editToDoListItemId)} />
+                }
             </div>
-            <AddToDoItem cbAddItem={addItem} />
-            {
-                editToDoListItemId &&
-                <EditToDoListItem cbUpdateEditToDoListItemId={updateEditToDoListItemId} cbUpdateToDoListItem={updateToDoListItem} activeToDoList={props.activeToDoList.label} editToDoListItem={toDoList.find(item => item.id === editToDoListItemId)} />
-            }
-
-        </div>
-    )
+        )
+    }
 }
 
 export default ToDoList;

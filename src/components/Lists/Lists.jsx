@@ -3,25 +3,28 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import './Lists.css'
 
-const Lists = React.memo((props) => {
-    const updateActiveTodoListId = (id) => {
-        props.cbUpdateActiveTodoListId(id);
+class Lists extends React.PureComponent {
+
+    updateActiveTodoListId = (id) => {
+        this.props.cbUpdateActiveTodoListId(id);
     }
 
-    const myLists = props.lists.map(item => {
+    render() {
+        console.log('render Lists');
+        const myLists = this.props.lists.map(item => {
+            return (
+                <ListItem onClick={() => { this.updateActiveTodoListId(item.id) }} key={item.id} button>
+                    <ListItemText primary={item.label} />
+                </ListItem>
+            )
+        });
         return (
-            <ListItem onClick={() => { updateActiveTodoListId(item.id) }} key={item.id} button>
-                <ListItemText primary={item.label} />
-            </ListItem>
+            <div className="lists">
+                <h1 className="lists__title">Списки:</h1>
+                {myLists}
+            </div>
         )
-    });
-
-    return (
-        <div className="lists">
-            <h1 className="lists__title">Списки:</h1>
-            {myLists}
-        </div>
-    )
-});
+    }
+}
 
 export default Lists;
