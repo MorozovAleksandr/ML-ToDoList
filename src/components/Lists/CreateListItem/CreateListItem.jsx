@@ -1,21 +1,20 @@
 import React from "react";
-import './CreateList.css'
+import './CreateListItem.css'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
 import SaveIcon from '@material-ui/icons/Save';
-
 import Slide from '@material-ui/core/Slide';
+import { myEvents } from '../../../events';
 
 const Transition = React.forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-class CreateList extends React.PureComponent {
+class CreateListItem extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,8 +28,8 @@ class CreateList extends React.PureComponent {
     }
 
     onSave = () => {
-        this.props.cbAddTodoList(this.state.label);
-        this.props.cbOnCloseAddListForm();
+        myEvents.emit('EaddTodoList', this.state.label);
+        myEvents.emit('EonCloseAddListForm');
         this.setState({ open: false });
     };
 
@@ -39,7 +38,7 @@ class CreateList extends React.PureComponent {
             label: '',
             open: false
         });
-        this.props.cbOnCloseAddListForm();
+        myEvents.emit('EonCloseAddListForm');
     };
 
     onKeyPressHandler = (event) => {
@@ -96,4 +95,4 @@ class CreateList extends React.PureComponent {
     }
 }
 
-export default CreateList;
+export default CreateListItem;

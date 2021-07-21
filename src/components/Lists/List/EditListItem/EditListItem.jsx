@@ -1,5 +1,5 @@
 import React from "react";
-import './EditToDoListItem.css'
+import './EditListItem.css'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,17 +8,17 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import SaveIcon from '@material-ui/icons/Save';
 import Slide from '@material-ui/core/Slide';
-import { myEvents } from '../../../events';
+import { myEvents } from '../../../../events';
 
 const Transition = React.forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-class EditToDoListItem extends React.PureComponent {
+class EditListItem extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            label: this.props.editToDoListItem.label,
+            label: this.props.label,
             open: true
         }
     }
@@ -28,8 +28,8 @@ class EditToDoListItem extends React.PureComponent {
     }
 
     onSave = () => {
-        const newToDoListItem = { ...this.props.editToDoListItem, label: this.state.label };
-        myEvents.emit('EupdateToDoListItem', newToDoListItem, newToDoListItem.id);
+        myEvents.emit('EupdateToDoListLabel', this.props.id, this.state.label);
+        myEvents.emit('EcloseFormEditListItem');
         this.setState({ open: false });
     };
 
@@ -38,7 +38,7 @@ class EditToDoListItem extends React.PureComponent {
             label: '',
             open: false
         });
-        myEvents.emit('EupdateEditToDoListItemId', null);
+        myEvents.emit('EcloseFormEditListItem');
     };
 
     onKeyPressHandler = (event) => {
@@ -49,7 +49,7 @@ class EditToDoListItem extends React.PureComponent {
 
     render() {
 
-        console.log('render EditToDoListItem ' + this.state.label);
+        console.log('render EditListItem ' + this.state.label);
         return (
             <div>
                 <Dialog
@@ -61,14 +61,14 @@ class EditToDoListItem extends React.PureComponent {
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle className="EditToDoListItem__title" id="alert-dialog-slide-title">{this.props.activeToDoList}</DialogTitle>
+                    <DialogTitle className="EditToDoListItem__title" id="alert-dialog-slide-title">Редактирование списка</DialogTitle>
                     <DialogContent>
                         <TextField
                             onChange={this.onLabelChange}
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Задача"
+                            label="Название списка"
                             color="primary"
                             type="text"
                             fullWidth
@@ -96,4 +96,4 @@ class EditToDoListItem extends React.PureComponent {
     }
 }
 
-export default EditToDoListItem;
+export default EditListItem;

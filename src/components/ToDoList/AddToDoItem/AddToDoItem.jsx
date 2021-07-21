@@ -2,6 +2,7 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import './AddToDoItem.css'
 import Button from '@material-ui/core/Button';
+import { myEvents } from '../../../events';
 
 
 class AddToDoItem extends React.PureComponent {
@@ -19,7 +20,7 @@ class AddToDoItem extends React.PureComponent {
     onSubmit = (e) => {
         e.preventDefault();
         if (this.state.label) {
-            this.props.cbAddItem(this.state.label);
+            myEvents.emit('EaddItem', this.state.label);
             this.setState({ label: '' });
         }
     }

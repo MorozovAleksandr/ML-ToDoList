@@ -4,6 +4,7 @@ import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
 import crypto from "crypto";
 import EditToDoListItem from "./EditToDoListItem/EditToDoListItem";
+import { myEvents } from '../../events';
 
 class ToDoList extends React.PureComponent {
 
@@ -15,12 +16,29 @@ class ToDoList extends React.PureComponent {
         }
     }
 
+    componentDidMount() {
+        myEvents.addListener("EaddItem", this.addItem);
+        myEvents.addListener("EupdateToDoListItem", this.updateToDoListItem);
+        myEvents.addListener("EdeleteItem", this.deleteItem);
+        myEvents.addListener("EtogglePropertyItem", this.togglePropertyItem);
+        myEvents.addListener("EupdateEditToDoListItemId", this.updateEditToDoListItemId);
+    }
+
+
     componentDidUpdate(prevProps) {
         if (this.props.activeToDoList !== prevProps.activeToDoList) {
             this.setState({
                 toDoList: this.props.activeToDoList.toDoList
             })
         }
+    }
+
+    componentWillUnmount() {
+        myEvents.removeListener("EaddItem", this.addItem);
+        myEvents.removeListener("EupdateToDoListItem", this.updateToDoListItem);
+        myEvents.removeListener("EdeleteItem", this.deleteItem);
+        myEvents.removeListener("EtogglePropertyItem", this.togglePropertyItem);
+        myEvents.removeListener("EupdateEditToDoListItemId", this.updateEditToDoListItemId);
     }
 
     createTodoItem = (label) => {
@@ -34,7 +52,7 @@ class ToDoList extends React.PureComponent {
 
     addItem = (item) => {
         const newtoDoList = [...this.state.toDoList, this.createTodoItem(item)];
-        this.props.cbUpdateToDoList(newtoDoList);
+        myEvents.emit('EupdateToDoList', newtoDoList);
     }
 
     updateToDoListItem = (item, id) => {
@@ -42,7 +60,7 @@ class ToDoList extends React.PureComponent {
         const before = this.state.toDoList.slice(0, idx);
         const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, item, ...after];
-        this.props.cbUpdateToDoList(newtoDoList);
+        myEvents.emit('EupdateToDoList', newtoDoList);
         this.setState({
             editToDoListItemId: null
         });
@@ -53,7 +71,7 @@ class ToDoList extends React.PureComponent {
         const before = this.state.toDoList.slice(0, idx);
         const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, ...after];
-        this.props.cbUpdateToDoList(newtoDoList);
+        myEvents.emit('EupdateToDoList', newtoDoList);
     }
 
     togglePropertyItem = (id, property) => {
@@ -63,7 +81,7 @@ class ToDoList extends React.PureComponent {
         const before = this.state.toDoList.slice(0, idx);
         const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, newItem, ...after];
-        this.props.cbUpdateToDoList(newtoDoList);
+        myEvents.emit('EupdateToDoList', newtoDoList);
     }
 
     updateEditToDoListItemId = (id) => {
@@ -72,11 +90,9 @@ class ToDoList extends React.PureComponent {
         });
     }
 
-
-
     render() {
         console.log('render ToDoList');
-        const elements = this.state.toDoList.map(item => <ToDoListItem cbTogglePropertyItem={this.togglePropertyItem} cbUpdateEditToDoListItemId={this.updateEditToDoListItemId} cbDeleteItem={this.deleteItem} key={item.id} item={item} />);
+        const elements = this.state.toDoList.map(item => <ToDoListItem key={item.id} item={item} />);
         return (
             <div className="todolist">
                 <h1 className="todolist__name">
@@ -85,10 +101,10 @@ class ToDoList extends React.PureComponent {
                 <div className="todolist__list">
                     {elements}
                 </div>
-                <AddToDoItem cbAddItem={this.addItem} />
+                <AddToDoItem />
                 {
                     this.state.editToDoListItemId &&
-                    <EditToDoListItem cbUpdateEditToDoListItemId={this.updateEditToDoListItemId} cbUpdateToDoListItem={this.updateToDoListItem} activeToDoList={this.props.activeToDoList.label} editToDoListItem={this.state.toDoList.find(item => item.id === this.state.editToDoListItemId)} />
+                    <EditToDoListItem activeToDoList={this.props.activeToDoList.label} editToDoListItem={this.state.toDoList.find(item => item.id === this.state.editToDoListItemId)} />
                 }
             </div>
         )

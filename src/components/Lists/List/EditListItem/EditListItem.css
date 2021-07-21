@@ -1,0 +1,22 @@
+.MuiDialog-paper {
+    background-color: rgba(50, 50, 50, 0.7) !important;
+}
+
+.MuiDialog-paperWidthSm {
+    width: 100%;
+}
+
+.EditToDoListItem__title {
+    color: white;
+}
+
+.saveEditToDoListItemButton {
+    background-color: #3CE6B0 !important;
+    color: black !important;
+}
+
+.Mui-disabled {
+    color: grey !important;
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.12) !important;
+}

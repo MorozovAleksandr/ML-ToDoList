@@ -5,27 +5,27 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import StarIcon from '@material-ui/icons/Star';
-
+import { myEvents } from '../../../events';
 
 class ToDoListItem extends React.PureComponent {
 
     onClickDone = (e) => {
-        this.props.cbTogglePropertyItem(this.props.item.id, 'done');
+        myEvents.emit('EtogglePropertyItem', this.props.item.id, 'done');
     }
 
     onClickImportant = (e) => {
         e.stopPropagation();
-        this.props.cbTogglePropertyItem(this.props.item.id, 'important');
+        myEvents.emit('EtogglePropertyItem', this.props.item.id, 'important');
     }
 
     onClickEdit = (e) => {
         e.stopPropagation();
-        this.props.cbUpdateEditToDoListItemId(this.props.item.id);
+        myEvents.emit('EupdateEditToDoListItemId', this.props.item.id);
     }
 
     onClickDelete = (e) => {
         e.stopPropagation();
-        this.props.cbDeleteItem(this.props.item.id);
+        myEvents.emit('EdeleteItem', this.props.item.id);
     }
 
     render() {
