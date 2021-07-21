@@ -24,6 +24,13 @@ class App extends React.PureComponent {
         }
     }
 
+    addTodoList = (label) => {
+        const newList = this.createTodoList(label, []);
+        this.setState({
+            lists: [...this.state.lists, newList]
+        })
+    }
+
     updateActiveTodoListId = (id) => {
         this.setState({
             activeToDoListId: id
@@ -48,7 +55,7 @@ class App extends React.PureComponent {
             <div className='wrapper'>
                 <SignIn />
                 <div className="content">
-                    <Lists cbUpdateActiveTodoListId={this.updateActiveTodoListId} lists={this.state.lists} />
+                    <Lists cbAddTodoList={this.addTodoList} cbUpdateActiveTodoListId={this.updateActiveTodoListId} lists={this.state.lists} />
                     {
                         this.state.activeToDoListId &&
                         <ToDoList cbUpdateToDoList={this.updateToDoList} activeToDoList={this.state.lists.find(item => item.id === this.state.activeToDoListId)} />

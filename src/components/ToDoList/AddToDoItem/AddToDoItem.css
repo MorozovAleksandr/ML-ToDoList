@@ -3,8 +3,8 @@
     align-items: flex-end;
     position: absolute;
     bottom: 0;
-    padding: 20px;
-    width: calc(100% - 42px);
+    padding: 30px;
+    width: calc(100% - 62px);
 }
 
 .addToDoItem__input {
@@ -27,4 +27,9 @@ label.Mui-focused {
 
 .MuiFormLabel-root {
     color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.addToDoItem__button {
+    background-color: #3CE6B0 !important;
+    color: black !important;
 }

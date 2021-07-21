@@ -1,5 +1,5 @@
 import React from "react";
-import './EditToDoListItem.css'
+import './CreateList.css'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,12 +15,12 @@ const Transition = React.forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-class EditToDoListItem extends React.PureComponent {
+class CreateList extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            label: this.props.editToDoListItem.label,
-            open: true
+            label: '',
+            open: true,
         }
     }
 
@@ -29,8 +29,8 @@ class EditToDoListItem extends React.PureComponent {
     }
 
     onSave = () => {
-        const newToDoListItem = { ...this.props.editToDoListItem, label: this.state.label };
-        this.props.cbUpdateToDoListItem(newToDoListItem, newToDoListItem.id)
+        this.props.cbAddTodoList(this.state.label);
+        this.props.cbOnCloseAddListForm();
         this.setState({ open: false });
     };
 
@@ -39,7 +39,7 @@ class EditToDoListItem extends React.PureComponent {
             label: '',
             open: false
         });
-        this.props.cbUpdateEditToDoListItemId(null);
+        this.props.cbOnCloseAddListForm();
     };
 
     onKeyPressHandler = (event) => {
@@ -49,8 +49,7 @@ class EditToDoListItem extends React.PureComponent {
     }
 
     render() {
-
-        console.log('render EditToDoListItem ' + this.state.label);
+        console.log('render Create List ');
         return (
             <div>
                 <Dialog
@@ -62,14 +61,14 @@ class EditToDoListItem extends React.PureComponent {
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle className="EditToDoListItem__title" id="alert-dialog-slide-title">{this.props.activeToDoList}</DialogTitle>
+                    <DialogTitle className="EditToDoListItem__title" id="alert-dialog-slide-title">Новый список</DialogTitle>
                     <DialogContent>
                         <TextField
                             onChange={this.onLabelChange}
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Задача"
+                            label="Имя списка"
                             color="primary"
                             type="text"
                             fullWidth
@@ -80,13 +79,13 @@ class EditToDoListItem extends React.PureComponent {
                     <DialogActions>
                         <Button variant="contained" size="medium" onClick={this.onClose}>Отменить</Button>
                         <Button
-                            className="saveEditToDoListItemButton"
                             variant="contained"
                             color="primary"
                             size="medium"
                             startIcon={<SaveIcon />}
                             onClick={this.onSave}
                             disabled={!this.state.label}
+                            className="saveListButton"
                         >
                             Сохранить
                         </Button>
@@ -97,4 +96,4 @@ class EditToDoListItem extends React.PureComponent {
     }
 }
 
-export default EditToDoListItem;
+export default CreateList;

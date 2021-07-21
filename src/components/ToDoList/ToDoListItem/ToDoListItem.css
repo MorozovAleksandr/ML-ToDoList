@@ -8,7 +8,7 @@
     margin: 3px;
     border-radius: 3px;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px 6px 5px 15px;
     font-size: 17px;
     order: 1;
 
@@ -29,10 +29,15 @@
 }
 
 .ToDoListItem .ToDoListItem__buttonDone {
-    border: 2px solid white;
+    border: 1px solid white;
     margin-right: 20px;
     box-sizing: border-box;
-    padding: 8px;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.ToDoListItem__button {
+    border-radius: 5px !important;
 }
 
 .ToDoListItem .ToDoListItem__buttonDone .MuiSvgIcon-root {
@@ -40,12 +45,12 @@
 }
 
 .done .ToDoListItem__buttonDone .MuiSvgIcon-root {
-    color: white;
+    color: black;
 }
 
 .done .ToDoListItem__buttonDone {
-    background-color: #3f51b5;
-    border: 2px solid #3f51b5;
+    background-color: #3CE6B0;
+    border: 2px solid #3CE6B0;
 }
 
 .ToDoListItem:hover {
@@ -58,8 +63,13 @@
 } */
 
 .ToDoListItem:hover .ToDoListItem__buttonDone .MuiSvgIcon-root {
-    transition: color 0.7s;
+    transition: color 0.4s;
     color: white;
+}
+
+.done:hover .ToDoListItem__buttonDone .MuiSvgIcon-root {
+    transition: color 0.4s;
+    color: black;
 }
 
 .important .MuiSvgIcon-root {
@@ -75,4 +85,9 @@
 .done {
     order: 2;
     transition: order 1.5s;
+}
+
+.ToDoListItem__leftBlock {
+    display: flex;
+    align-items: center;
 }

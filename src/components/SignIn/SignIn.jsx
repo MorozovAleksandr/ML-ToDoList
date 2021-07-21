@@ -14,10 +14,10 @@ class SignIn extends React.PureComponent {
         return (
             <div className={s.signInWrapper}>
                 <Button onClick={() => { this.testOnclick('Sign In') }} className={s.signInButton} variant="contained" color="primary">
-                    Sign In
+                    Войти
                 </Button>
                 <Button onClick={() => { this.testOnclick('Registation') }} className={s.signInButton} variant="contained" color="primary">
-                    Registation
+                    Регистрация
                 </Button>
             </div>
         )

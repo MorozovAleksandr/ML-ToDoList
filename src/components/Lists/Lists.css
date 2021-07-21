@@ -1,9 +1,23 @@
 .lists {
     background-color: rgb(50, 50, 50);
-    padding: 20px;
+    padding: 30px;
 }
 
 .lists__title {
     margin: 0;
     margin-bottom: 8px;
+}
+
+.lists__addListButton {
+    border-top: 1px solid rgba(200, 200, 200, 0.5);
+    cursor: pointer;
+}
+
+.lists__addListButton:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.lists__addListButton:hover .MuiSvgIcon-root {
+    color: #3CE6B0;
 }

@@ -3,12 +3,12 @@
 }
 
 .todolist__name {
-    padding: 20px;
+    padding: 30px;
     margin: 0;
 }
 
 .todolist__list {
-    padding: 20px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
 }

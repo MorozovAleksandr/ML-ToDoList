@@ -32,7 +32,7 @@ class ToDoListItem extends React.PureComponent {
         console.log('render task id: ' + this.props.item.id);
         return (
             <div className={`ToDoListItem ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`} onClick={this.onClickDone} >
-                <div>
+                <div className="ToDoListItem__leftBlock">
                     <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={this.onClickDone} color="inherit" aria-label="delete">
                         <CheckIcon fontSize="small" />
                     </IconButton>
