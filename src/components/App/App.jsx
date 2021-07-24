@@ -99,7 +99,7 @@ class App extends React.PureComponent {
     }
 
     render() {
-        console.log('render app');
+        console.log('Render app');
         return (
             <div className='wrapper'>
                 <SignIn />
