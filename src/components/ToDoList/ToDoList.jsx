@@ -46,7 +46,7 @@ class ToDoList extends React.PureComponent {
             label: label,
             important: false,
             done: false,
-            id: crypto.randomBytes(2).toString("hex")
+            id: crypto.randomBytes(3).toString("hex")
         }
     };
 
@@ -91,7 +91,6 @@ class ToDoList extends React.PureComponent {
     }
 
     render() {
-        console.log('render ToDoList');
         const elements = this.state.toDoList.map(item => <ToDoListItem key={item.id} item={item} />);
         return (
             <div className="todolist">

@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import { NavLink } from 'react-router-dom';
 import { myEvents } from '../../../events';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import './Registration.css';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
 function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [createAccountStatus, setCreateAccountStatus] = useState(null); // null - ещё не создавался. 1 - Создан успешно. 2 - Ошибка. 3 - ожидание, крутим волчок)
-    const [progressVision, setProgressVision] = useState(false);
+    const [error, setError] = useState('');
+    const [createAccountStatus, setCreateAccountStatus] = useState(null); // null - ещё не создавался. 1 - Создан успешно. 2 - Ошибка. 3 - ожидание, крутим волчок);
 
     const classes = useStyles();
 
@@ -47,24 +48,22 @@ function SignUp() {
 
     function createAccount(e) {
         e.preventDefault();
-        /* setProgressVision(true); */
         setCreateAccountStatus(3);
         let promise = new Promise((resolve, reject) => {
             myEvents.emit('EcreateAccount', email, password, resolve, reject);
         });
         promise
             .then(result => {
-                setProgressVision(false);
                 setCreateAccountStatus(1);
             })
             .catch(error => {
-                console.log(error);
+                setError(error.message);
                 setCreateAccountStatus(2);
             });
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" className="signup_wrapper" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -75,7 +74,7 @@ function SignUp() {
                 </Typography>
 
                 {
-                    createAccountStatus === null
+                    (createAccountStatus === null || createAccountStatus === 2)
                         ?
                         <form className={classes.form} noValidate onSubmit={createAccount}>
                             <Grid container spacing={2}>
@@ -92,6 +91,11 @@ function SignUp() {
                                         value={email}
                                     />
                                 </Grid>
+                                {
+                                    error &&
+                                    <div className="signup_error">{error}</div>
+                                }
+
                                 <Grid item xs={12}>
                                     <TextField
                                         variant="outlined"
@@ -113,30 +117,41 @@ function SignUp() {
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
+                                onClick={createAccount}
                             >
                                 Sign Up
                             </Button>
+                            <Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    <NavLink to="/signin" variant="body2">
+                                        Already have an account? Sign in
+                                    </NavLink>
+                                </Grid>
+                            </Grid>
                         </form>
                         :
                         createAccountStatus === 1
                             ?
-                            <div>Создан успешно</div>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <h2 className="signup__successTitle">Ваш аккаунт успешно создан!</h2>
+                                    <NavLink to="/signin" variant="body2">
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Войти в аккаунт
+                                        </Button>
+                                    </NavLink>
+                                </Grid>
+                            </Grid>
                             :
-                            createAccountStatus === 2
-                                ?
-                                <div>Ошибка</div>
-                                :
-                                <CircularProgress />
+                            <CircularProgress className="signup__circularProgress" />
                 }
 
 
-                <Grid container justifyContent="flex-end">
-                    <Grid item>
-                        <NavLink to="/signin" variant="body2">
-                            Already have an account? Sign in
-                        </NavLink>
-                    </Grid>
-                </Grid>
+
             </div>
         </Container>
     );

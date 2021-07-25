@@ -1,0 +1,23 @@
+.signup_wrapper {
+    min-height: 336px;
+}
+
+.signup__successTitle {
+    padding: 62px 0;
+    text-align: center;
+}
+
+.signup__circularProgress {
+    margin: 104px 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.signup_error {
+    width: 100%;
+    padding: 10px 0;
+    color: #f36396;
+    text-align: center;
+}

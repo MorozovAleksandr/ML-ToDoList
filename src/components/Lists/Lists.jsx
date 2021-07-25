@@ -40,7 +40,6 @@ class Lists extends React.PureComponent {
     }
 
     render() {
-        console.log('render Lists');
         const myLists = this.props.lists.map(item => {
             return (
                 <List id={item.id} label={item.label} key={item.id} />

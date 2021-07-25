@@ -1,4 +1,60 @@
-import React from "react";
+import React, { Fragment } from "react";
+import s from './LogIn.module.css';
+import Button from '@material-ui/core/Button';
+import { NavLink } from 'react-router-dom';
+import { myEvents } from '../../events';
+
+class LogIn extends React.PureComponent {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: this.props.user
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.user !== prevProps.user) {
+            this.setState({
+                user: this.props.user
+            })
+        }
+    }
+
+    signOut = () => {
+        myEvents.emit("EsignOut");
+    }
+
+    render() {
+        return (
+            <div className={s.signInWrapper}>
+                {this.state.user
+                    ?
+                    <Button onClick={this.signOut} className={s.signInButton} variant="contained" color="primary">
+                        Выйти
+                    </Button>
+                    :
+                    <Fragment>
+                        <NavLink to="/signin" className={s.logIn__link} activeClassName="SActivated">
+                            <Button className={s.signInButton} variant="contained" color="primary">
+                                Войти
+                            </Button>
+                        </NavLink>
+                        <NavLink to="/signup" className={s.logIn__link} activeClassName="SActivated">
+                            <Button className={s.signInButton} variant="contained" color="primary">
+                                Регистрация
+                            </Button>
+                        </NavLink>
+                    </Fragment>
+                }
+            </div>
+        )
+    }
+}
+
+export default LogIn;
+
+/* import React from "react";
 import s from './LogIn.module.css';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -32,7 +88,6 @@ class LogIn extends React.PureComponent {
     }
 
     render() {
-        console.log('render Sign in');
         return (
             <Dialog
                 open={this.state.open}
@@ -59,4 +114,4 @@ class LogIn extends React.PureComponent {
     }
 }
 
-export default LogIn;
+export default LogIn; */

@@ -63,7 +63,6 @@ class List extends React.PureComponent {
 
     render() {
         const open = Boolean(this.state.anchorEl);
-        console.log('redner List: ' + this.props.label);
         return (
             <div>
                 <ListItem onClick={() => { myEvents.emit('EupdateActiveTodoListId', this.props.id); }} button>

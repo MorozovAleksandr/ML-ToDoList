@@ -48,8 +48,6 @@ class EditToDoListItem extends React.PureComponent {
     }
 
     render() {
-
-        console.log('render EditToDoListItem ' + this.state.label);
         return (
             <div>
                 <Dialog

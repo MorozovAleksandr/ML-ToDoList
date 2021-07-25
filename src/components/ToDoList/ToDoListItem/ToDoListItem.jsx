@@ -29,7 +29,6 @@ class ToDoListItem extends React.PureComponent {
     }
 
     render() {
-        console.log('render task id: ' + this.props.item.id);
         return (
             <div className={`ToDoListItem ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`} onClick={this.onClickDone} >
                 <div className="ToDoListItem__leftBlock">

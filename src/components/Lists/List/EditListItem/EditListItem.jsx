@@ -48,8 +48,6 @@ class EditListItem extends React.PureComponent {
     }
 
     render() {
-
-        console.log('render EditListItem ' + this.state.label);
         return (
             <div>
                 <Dialog

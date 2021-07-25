@@ -48,7 +48,6 @@ class CreateListItem extends React.PureComponent {
     }
 
     render() {
-        console.log('render Create List ');
         return (
             <div>
                 <Dialog
