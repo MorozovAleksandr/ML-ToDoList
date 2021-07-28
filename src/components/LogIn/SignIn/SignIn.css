@@ -1,0 +1,62 @@
+.signin__wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signin_container {
+    min-height: 336px;
+    margin-top: -80px;
+}
+
+.signin__circularProgress {
+    margin: 104px 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.signin__validateMessage {
+    padding: 8px;
+    color: #CC4E5C;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.signin_container .MuiAvatar-root {
+    background-color: #3CE6B0 !important;
+}
+
+.signin_container .MuiSvgIcon-root {
+    fill: black;
+}
+
+.signin_container .MuiButton-containedPrimary {
+    background-color: #3CE6B0;
+    color: black;
+}
+
+.signin_container .signin__link {
+    color: white;
+}
+
+.signin_container .signin__grid {
+    position: relative;
+}
+
+.signin_container .signin__visibilityPassword {
+    height: 48px;
+    width: 48px;
+    position: absolute;
+    right: 12px;
+    top: 20px;
+    bottom: 0;
+}
+
+.signin__visibilityPassword .MuiSvgIcon-root {
+    fill: white;
+}

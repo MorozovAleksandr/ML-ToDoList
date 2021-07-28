@@ -12,6 +12,10 @@ import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { myEvents } from '../../../events';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import './SignIn.css'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -37,11 +41,49 @@ function SignIn(props) {
     const [password, setPassword] = useState('');
     const [signinAccountStatus, setSigninAccountStatus] = useState(null); // null - ещё не зашли. 1 - Зашли успешно. 2 - Ошибка. 3 - ожидание, крутим волчок);
     const [error, setError] = useState('');
-
+    const [showPassword, setShopPassword] = useState(false);
+    const [validateDataEmail, setValidateDataEmail] = useState({
+        status: false,
+        validationMessage: 'Не корректный e-mail'
+    });
+    const [validateDataPassword, setValidateDataPassword] = useState({
+        status: false,
+        validationMessage: 'Минимум 8 символов'
+    });
     const classes = useStyles();
+
+    const handleClickShowPassword = () => {
+        setShopPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     function handleChange(e) {
         e.target.id === 'email' ? setEmail(e.target.value) : setPassword(e.target.value);
+        validation(e.target.id, e.target.value);
+    }
+
+    function validation(field, value) {
+        switch (field) {
+            case 'email':
+                if (/.+@.+\..+/.test(value)) {
+                    setValidateDataEmail({ ...validateDataEmail, status: true });
+                } else {
+                    setValidateDataEmail({ ...validateDataEmail, status: false });
+                }
+                break;
+            case 'password':
+                if (value.length >= 8) {
+                    setValidateDataPassword({ ...validateDataPassword, status: true });
+                } else {
+                    setValidateDataPassword({ ...validateDataPassword, status: false });
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     function signInAccount(e) {
@@ -63,71 +105,96 @@ function SignIn(props) {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                {
-                    (signinAccountStatus === null || signinAccountStatus === 2)
-                        ?
-                        <form className={classes.form} noValidate onSubmit={signInAccount}>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                                onChange={handleChange}
-                                value={email}
-                            />
-                            {
-                                error &&
-                                <div className="signup_error">{error}</div>
-                            }
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={handleChange}
-                                value={password}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item>
-                                    <NavLink to="/signup" activeClassName="SActivated" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </NavLink>
+        <div className="signin__wrapper">
+            <Container className="signin_container" component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    {
+                        (signinAccountStatus === null || signinAccountStatus === 2)
+                            ?
+                            <form className={classes.form} noValidate onSubmit={signInAccount}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                    onChange={handleChange}
+                                    value={email}
+                                />
+                                {
+                                    (!validateDataEmail.status && email) &&
+                                    <div className="signin__validateMessage">{validateDataEmail.validationMessage}</div>
+                                }
+                                <Grid className="signin__grid">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        id="password"
+                                        autoComplete="current-password"
+                                        onChange={handleChange}
+                                        value={password}
+                                    />
+
+                                    <IconButton
+                                        className="signin__visibilityPassword"
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                    >
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
                                 </Grid>
-                            </Grid>
-                        </form>
-                        :
-                        <CircularProgress className="signup__circularProgress" />
-                }
-            </div>
-        </Container>
+
+                                {
+                                    (!validateDataPassword.status && password) &&
+                                    <div className="signin__validateMessage">{validateDataPassword.validationMessage}</div>
+                                }
+
+                                {
+                                    error &&
+                                    <div className="signin__validateMessage">{error}</div>
+                                }
+
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                    disabled={!(validateDataPassword.status && validateDataEmail.status)}
+                                >
+                                    Sign In
+                                </Button>
+                                <Grid container>
+                                    <Grid item>
+                                        <NavLink className="signin__link" to="/signup" activeClassName="SActivated" variant="body2">
+                                            {"Don't have an account? Sign Up"}
+                                        </NavLink>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                            :
+                            <CircularProgress className="signin__circularProgress" />
+                    }
+                </div>
+            </Container>
+        </div>
     );
 }
 
