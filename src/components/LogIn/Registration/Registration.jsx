@@ -43,21 +43,37 @@ function SignUp() {
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [validateDataEmail, setValidateDataEmail] = useState({
         status: false,
-        validationMessage: 'Не корректный e-mail'
+        validationMessage: 'Не корректный e-mail',
+        onBlur: false
     });
     const [validateDataPassword, setValidateDataPassword] = useState({
         status: false,
-        validationMessage: 'Минимум 8 символов'
+        validationMessage: 'Минимум 8 символов',
+        onBlur: false
     });
     const [showPassword, setShopPassword] = useState(false);
     const [validateDataPasswordRepeat, setValidateDataPasswordRepeat] = useState({
         status: false,
-        validationMessage: 'Пароли не совпадают'
+        validationMessage: 'Пароли не совпадают',
+        onBlur: false
     });
     const [error, setError] = useState('');
     const [createAccountStatus, setCreateAccountStatus] = useState(null); // null - ещё не создавался. 1 - Создан успешно. 2 - Ошибка. 3 - ожидание, крутим волчок);
 
 
+    function onBlurField(e) {
+        if (e.target.id === 'email') {
+            setValidateDataEmail({ ...validateDataEmail, onBlur: true });
+        }
+
+        if (e.target.id === 'password') {
+            setValidateDataPassword({ ...validateDataPassword, onBlur: true });
+        }
+
+        if (e.target.id === 'passwordRepeat') {
+            setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, onBlur: true });
+        }
+    }
 
     const classes = useStyles();
 
@@ -96,11 +112,16 @@ function SignUp() {
             case 'password':
                 if (value.length >= 8) {
                     setValidateDataPassword({ ...validateDataPassword, status: true });
-                    if (value !== validateDataPasswordRepeat) {
+                    if (value !== passwordRepeat) {
                         setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, status: false });
                     }
                 } else {
                     setValidateDataPassword({ ...validateDataPassword, status: false });
+                }
+                if (passwordRepeat === value) {
+                    setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, status: true });
+                } else {
+                    setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, status: false });
                 }
                 break;
             case 'passwordRepeat':
@@ -159,11 +180,12 @@ function SignUp() {
                                             autoComplete="off"
                                             onChange={handleChange}
                                             value={email}
+                                            onBlur={onBlurField}
                                         />
                                     </Grid>
 
                                     {
-                                        (!validateDataEmail.status && email) &&
+                                        (!validateDataEmail.status && email && validateDataEmail.onBlur) &&
                                         <div className="signup__validateMessage">{validateDataEmail.validationMessage}</div>
                                     }
 
@@ -179,7 +201,7 @@ function SignUp() {
                                             autoComplete="off"
                                             onChange={handleChange}
                                             value={password}
-
+                                            onBlur={onBlurField}
                                         />
                                         <IconButton
                                             className="signup__visibilityPassword"
@@ -192,7 +214,7 @@ function SignUp() {
                                     </Grid>
 
                                     {
-                                        (!validateDataPassword.status && password) &&
+                                        (!validateDataPassword.status && password && validateDataPassword.onBlur) &&
                                         <div className="signup__validateMessage">{validateDataPassword.validationMessage}</div>
                                     }
 
@@ -208,6 +230,7 @@ function SignUp() {
                                             autoComplete="off"
                                             onChange={handleChange}
                                             value={passwordRepeat}
+                                            onBlur={onBlurField}
                                         />
                                         <IconButton
                                             className="signup__visibilityPassword"
@@ -220,7 +243,7 @@ function SignUp() {
                                     </Grid>
 
                                     {
-                                        (!validateDataPasswordRepeat.status && passwordRepeat) &&
+                                        (!validateDataPasswordRepeat.status && passwordRepeat && validateDataPasswordRepeat.onBlur) &&
                                         <div className="signup__validateMessage">{validateDataPasswordRepeat.validationMessage}</div>
                                     }
 

@@ -65,7 +65,7 @@ class List extends React.PureComponent {
         const open = Boolean(this.state.anchorEl);
         return (
             <div>
-                <ListItem onClick={() => { myEvents.emit('EupdateActiveTodoListId', this.props.id); }} button>
+                <ListItem className="list__item" onClick={() => { myEvents.emit('EupdateActiveTodoListId', this.props.id); }} button>
                     <ListItemText primary={this.props.label} />
                     <div>
                         <IconButton className="list__buttonMenu" aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>

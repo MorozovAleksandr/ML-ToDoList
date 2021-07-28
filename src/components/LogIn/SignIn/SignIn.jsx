@@ -44,11 +44,13 @@ function SignIn(props) {
     const [showPassword, setShopPassword] = useState(false);
     const [validateDataEmail, setValidateDataEmail] = useState({
         status: false,
-        validationMessage: 'Не корректный e-mail'
+        validationMessage: 'Не корректный e-mail',
+        onBlur: false
     });
     const [validateDataPassword, setValidateDataPassword] = useState({
         status: false,
-        validationMessage: 'Минимум 8 символов'
+        validationMessage: 'Минимум 8 символов',
+        onBlur: false
     });
     const classes = useStyles();
 
@@ -84,6 +86,10 @@ function SignIn(props) {
             default:
                 break;
         }
+    }
+
+    function onBlurField(e) {
+        e.target.id === 'email' ? setValidateDataEmail({ ...validateDataEmail, onBlur: true }) : setValidateDataPassword({ ...validateDataPassword, onBlur: true });
     }
 
     function signInAccount(e) {
@@ -131,9 +137,10 @@ function SignIn(props) {
                                     autoFocus
                                     onChange={handleChange}
                                     value={email}
+                                    onBlur={onBlurField}
                                 />
                                 {
-                                    (!validateDataEmail.status && email) &&
+                                    (!validateDataEmail.status && email && validateDataEmail.onBlur) &&
                                     <div className="signin__validateMessage">{validateDataEmail.validationMessage}</div>
                                 }
                                 <Grid className="signin__grid">
@@ -149,6 +156,7 @@ function SignIn(props) {
                                         autoComplete="off"
                                         onChange={handleChange}
                                         value={password}
+                                        onBlur={onBlurField}
                                     />
 
                                     <IconButton
@@ -162,7 +170,7 @@ function SignIn(props) {
                                 </Grid>
 
                                 {
-                                    (!validateDataPassword.status && password) &&
+                                    (!validateDataPassword.status && password && validateDataPassword.onBlur) &&
                                     <div className="signin__validateMessage">{validateDataPassword.validationMessage}</div>
                                 }
 
