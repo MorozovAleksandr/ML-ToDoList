@@ -11,6 +11,9 @@ import Container from '@material-ui/core/Container';
 import { NavLink } from 'react-router-dom';
 import { myEvents } from '../../../events';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import './Registration.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,13 +40,79 @@ const useStyles = makeStyles((theme) => ({
 function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordRepeat, setPasswordRepeat] = useState('');
+    const [validateDataEmail, setValidateDataEmail] = useState({
+        status: false,
+        validationMessage: 'Не корректный e-mail'
+    });
+    const [validateDataPassword, setValidateDataPassword] = useState({
+        status: false,
+        validationMessage: 'Минимум 8 символов'
+    });
+    const [showPassword, setShopPassword] = useState(false);
+    const [validateDataPasswordRepeat, setValidateDataPasswordRepeat] = useState({
+        status: false,
+        validationMessage: 'Пароли не совпадают'
+    });
     const [error, setError] = useState('');
     const [createAccountStatus, setCreateAccountStatus] = useState(null); // null - ещё не создавался. 1 - Создан успешно. 2 - Ошибка. 3 - ожидание, крутим волчок);
 
+
+
     const classes = useStyles();
 
+    const handleClickShowPassword = () => {
+        setShopPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
     function handleChange(e) {
-        e.target.id === 'email' ? setEmail(e.target.value) : setPassword(e.target.value);
+        if (e.target.id === 'email') {
+            setEmail(e.target.value);
+        }
+
+        if (e.target.id === 'password') {
+            setPassword(e.target.value)
+        }
+
+        if (e.target.id === 'passwordRepeat') {
+            setPasswordRepeat(e.target.value)
+        }
+        validation(e.target.id, e.target.value);
+    }
+
+    function validation(field, value) {
+        switch (field) {
+            case 'email':
+                if (/.+@.+\..+/.test(value)) {
+                    setValidateDataEmail({ ...validateDataEmail, status: true });
+                } else {
+                    setValidateDataEmail({ ...validateDataEmail, status: false });
+                }
+                break;
+            case 'password':
+                if (value.length >= 8) {
+                    setValidateDataPassword({ ...validateDataPassword, status: true });
+                    if (value !== validateDataPasswordRepeat) {
+                        setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, status: false });
+                    }
+                } else {
+                    setValidateDataPassword({ ...validateDataPassword, status: false });
+                }
+                break;
+            case 'passwordRepeat':
+                if (value === password) {
+                    setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, status: true });
+                } else {
+                    setValidateDataPasswordRepeat({ ...validateDataPasswordRepeat, status: false });
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     function createAccount(e) {
@@ -63,97 +132,151 @@ function SignUp() {
     }
 
     return (
-        <Container component="main" className="signup_wrapper" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign up
-                </Typography>
+        <div className="signup__wrapper">
+            <Container component="main" className="signup_container" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
+                    </Typography>
 
-                {
-                    (createAccountStatus === null || createAccountStatus === 2)
-                        ?
-                        <form className={classes.form} noValidate onSubmit={createAccount}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="email"
-                                        label="Email Address"
-                                        name="email"
-                                        autoComplete="email"
-                                        onChange={handleChange}
-                                        value={email}
-                                    />
+                    {
+                        (createAccountStatus === null || createAccountStatus === 2)
+                            ?
+                            <form className={classes.form} noValidate onSubmit={createAccount}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            name="email"
+                                            autoComplete="off"
+                                            onChange={handleChange}
+                                            value={email}
+                                        />
+                                    </Grid>
+
+                                    {
+                                        (!validateDataEmail.status && email) &&
+                                        <div className="signup__validateMessage">{validateDataEmail.validationMessage}</div>
+                                    }
+
+                                    <Grid className="signup__grid" item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            id="password"
+                                            autoComplete="current-password"
+                                            onChange={handleChange}
+                                            value={password}
+
+                                        />
+                                        <IconButton
+                                            className="signup__visibilityPassword"
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </Grid>
+
+                                    {
+                                        (!validateDataPassword.status && password) &&
+                                        <div className="signup__validateMessage">{validateDataPassword.validationMessage}</div>
+                                    }
+
+                                    <Grid className="signup__grid" item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Repeat Password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            id="passwordRepeat"
+                                            autoComplete="current-password"
+                                            onChange={handleChange}
+                                            value={passwordRepeat}
+                                        />
+                                        <IconButton
+                                            className="signup__visibilityPassword"
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </Grid>
+
+                                    {
+                                        (!validateDataPasswordRepeat.status && passwordRepeat) &&
+                                        <div className="signup__validateMessage">{validateDataPasswordRepeat.validationMessage}</div>
+                                    }
+
                                 </Grid>
+
                                 {
                                     error &&
-                                    <div className="signup_error">{error}</div>
+                                    <div className="signup__validateMessage">{error}</div>
                                 }
 
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                        onChange={handleChange}
-                                        value={password}
-                                    />
+
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                    onClick={createAccount}
+                                    disabled={!(validateDataPasswordRepeat.status && validateDataPassword.status && validateDataEmail.status)}
+                                >
+                                    Sign Up
+                                </Button>
+                                <Grid container justifyContent="flex-end">
+                                    <Grid item>
+                                        <NavLink className="signup__link" to="/signin" variant="body2">
+                                            Already have an account? Sign in
+                                        </NavLink>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                                onClick={createAccount}
-                            >
-                                Sign Up
-                            </Button>
-                            <Grid container justifyContent="flex-end">
-                                <Grid item>
-                                    <NavLink to="/signin" variant="body2">
-                                        Already have an account? Sign in
-                                    </NavLink>
-                                </Grid>
-                            </Grid>
-                        </form>
-                        :
-                        createAccountStatus === 1
-                            ?
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <h2 className="signup__successTitle">Ваш аккаунт успешно создан!</h2>
-                                    <NavLink to="/signin" variant="body2">
-                                        <Button
-                                            fullWidth
-                                            variant="contained"
-                                            color="primary"
-                                        >
-                                            Войти в аккаунт
-                                        </Button>
-                                    </NavLink>
-                                </Grid>
-                            </Grid>
+                            </form>
                             :
-                            <CircularProgress className="signup__circularProgress" />
-                }
+                            createAccountStatus === 1
+                                ?
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <h2 className="signup__successTitle">Ваш аккаунт успешно создан!</h2>
+                                        <NavLink to="/signin" variant="body2">
+                                            <Button
+                                                fullWidth
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                Войти в аккаунт
+                                            </Button>
+                                        </NavLink>
+                                    </Grid>
+                                </Grid>
+                                :
+                                <CircularProgress className="signup__circularProgress" />
+                    }
 
 
 
-            </div>
-        </Container>
+                </div>
+            </Container>
+        </div>
     );
 };
 
