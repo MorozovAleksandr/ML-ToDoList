@@ -7,6 +7,7 @@ import { myEvents } from '../../events';
 import { Route } from 'react-router-dom';
 import SignIn from '../LogIn/SignIn/SignIn.jsx';
 import Registration from '../LogIn/Registration/Registration.jsx';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import firebase from 'firebase/app';
 import crypto from "crypto";
 import 'firebase/auth';
@@ -14,7 +15,6 @@ import 'firebase/database';
 import "./App.css";
 
 class App extends React.PureComponent {
-
     constructor(props) {
         super(props);
         this.idList = 1;
@@ -22,9 +22,20 @@ class App extends React.PureComponent {
             activeToDoListId: null,
             lists: /* dataJson.lists.map(item => this.createTodoList(...item)) */[],
             listsDefault: dataJson.lists.map(item => this.createTodoList(...item)),
-            user: false
+            user: false,
+            loadingData: true,
         }
+    }
 
+    componentDidMount() {
+        myEvents.addListener("EaddTodoList", this.addTodoList);
+        myEvents.addListener("EdeleteToDoList", this.deleteToDoList);
+        myEvents.addListener("EupdateToDoListLabel", this.updateToDoListLabel);
+        myEvents.addListener("EupdateActiveTodoListId", this.updateActiveTodoListId);
+        myEvents.addListener("EupdateToDoList", this.updateToDoList);
+        myEvents.addListener("EcreateAccount", this.createAccount);
+        myEvents.addListener("EsignInAccount", this.signInAccount);
+        myEvents.addListener("EsignOut", this.signOut);
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 let uid = user.uid;
@@ -44,6 +55,7 @@ class App extends React.PureComponent {
                     this.setState({
                         lists: updateData,
                         user: uid,
+                        loadingData: false
                     });
                 }).catch((error) => {
                     console.error(error);
@@ -51,21 +63,11 @@ class App extends React.PureComponent {
             } else {
                 this.setState({
                     user: false,
-                    lists: this.state.listsDefault
+                    lists: this.state.listsDefault,
+                    loadingData: false
                 })
             }
         });
-    }
-
-    componentDidMount() {
-        myEvents.addListener("EaddTodoList", this.addTodoList);
-        myEvents.addListener("EdeleteToDoList", this.deleteToDoList);
-        myEvents.addListener("EupdateToDoListLabel", this.updateToDoListLabel);
-        myEvents.addListener("EupdateActiveTodoListId", this.updateActiveTodoListId);
-        myEvents.addListener("EupdateToDoList", this.updateToDoList);
-        myEvents.addListener("EcreateAccount", this.createAccount);
-        myEvents.addListener("EsignInAccount", this.signInAccount);
-        myEvents.addListener("EsignOut", this.signOut);
     }
 
     componentWillUnmount() {
@@ -92,7 +94,7 @@ class App extends React.PureComponent {
         this.setState({
             lists: [...this.state.lists, newList]
         }, () => {
-            this.sendListToDB(this.state.user, [...this.state.lists])
+            this.sendListToDB(this.state.user, this.state.lists);
         })
     }
 
@@ -112,7 +114,7 @@ class App extends React.PureComponent {
                 }
             }
         }, () => {
-            this.sendListToDB(this.state.user, [...this.state.lists])
+            this.sendListToDB(this.state.user, this.state.lists);
         })
     }
 
@@ -126,7 +128,7 @@ class App extends React.PureComponent {
                 lists: [...before, updateToDoList, ...after]
             }
         }, () => {
-            this.sendListToDB(this.state.user, [...this.state.lists])
+            this.sendListToDB(this.state.user, this.state.lists);
         })
     }
 
@@ -146,14 +148,14 @@ class App extends React.PureComponent {
                 lists: [...before, updateToDoList, ...after]
             }
         }, () => {
-            this.sendListToDB(this.state.user, [...this.state.lists])
+            this.sendListToDB(this.state.user, this.state.lists);
         })
     }
 
     createAccount = (email, password, resolve, reject) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(response => {
-                this.sendListToDB(response.user.uid, [...this.state.listsDefault], true);
+                this.sendListToDB(response.user.uid, this.state.listsDefault, true);
                 resolve(response);
             })
             .catch(error => reject(error));
@@ -179,7 +181,7 @@ class App extends React.PureComponent {
                     this.setState({
                         lists: updateData,
                         user: response.user.uid,
-                        activeToDoListId: null
+                        activeToDoListId: null,
                     });
                 }).catch((error) => {
                     console.error(error);
@@ -192,7 +194,8 @@ class App extends React.PureComponent {
         firebase.auth().signOut().then(() => {
             this.setState({
                 lists: this.state.listsDefault,
-                activeToDoListId: null
+                activeToDoListId: null,
+                user: false
             })
         }).catch((error) => {
             console.log(error);
@@ -210,6 +213,13 @@ class App extends React.PureComponent {
     render() {
         return (
             <div className='wrapper'>
+                {
+                    this.state.loadingData &&
+                    <div className="wrapper__circularProgress">
+                        <CircularProgress className="circularProgress" />
+                    </div>
+                }
+
                 <Route path="/signin" component={SignIn} />
                 <Route path="/signup" component={Registration} />
                 <Route path="/" exact render={() =>
