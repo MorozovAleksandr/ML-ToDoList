@@ -127,7 +127,7 @@ function SignIn(props) {
                                     id="email"
                                     label="Email Address"
                                     name="email"
-                                    autoComplete="email"
+                                    autoComplete="off"
                                     autoFocus
                                     onChange={handleChange}
                                     value={email}
@@ -146,7 +146,7 @@ function SignIn(props) {
                                         label="Password"
                                         type={showPassword ? 'text' : 'password'}
                                         id="password"
-                                        autoComplete="current-password"
+                                        autoComplete="off"
                                         onChange={handleChange}
                                         value={password}
                                     />

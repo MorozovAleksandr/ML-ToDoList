@@ -176,7 +176,7 @@ function SignUp() {
                                             label="Password"
                                             type={showPassword ? 'text' : 'password'}
                                             id="password"
-                                            autoComplete="current-password"
+                                            autoComplete="off"
                                             onChange={handleChange}
                                             value={password}
 
@@ -205,7 +205,7 @@ function SignUp() {
                                             label="Repeat Password"
                                             type={showPassword ? 'text' : 'password'}
                                             id="passwordRepeat"
-                                            autoComplete="current-password"
+                                            autoComplete="off"
                                             onChange={handleChange}
                                             value={passwordRepeat}
                                         />
