@@ -91,12 +91,21 @@ class ToDoList extends React.PureComponent {
     }
 
     render() {
+        const doneCount = this.state.toDoList.filter(el => el.done).length;
+        const toDoCount = this.state.toDoList.length - doneCount;
         const elements = this.state.toDoList.map(item => <ToDoListItem key={item.id} item={item} />);
         return (
             <div className="todolist">
                 <h1 className="todolist__name">
                     {this.props.activeToDoList.label}
                 </h1>
+                {
+                    this.state.toDoList.length > 0 &&
+                    <div className="todolist__counts">
+                        <div className="todolist__counts__item">Осталось <span className="todolist__counts__item_count">{toDoCount}</span></div>
+                        <div className="todolist__counts__item">Выполнено <span className="todolist__counts__item_count">{doneCount}</span></div>
+                    </div>
+                }
                 <div className="todolist__list">
                     {elements}
                 </div>

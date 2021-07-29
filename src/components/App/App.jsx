@@ -39,12 +39,12 @@ class App extends React.PureComponent {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 let uid = user.uid;
-                let listsRef = firebase.database().ref(`users/${uid}/lists`);
+                let listsRef = firebase.database().ref(`users/${uid}`);
                 listsRef.get().then((snapshot) => {
                     const data = snapshot.val();
                     let updateData = [];
-                    if (data) {
-                        updateData = data.map(item => {
+                    if (data.lists) {
+                        updateData = data.lists.map(item => {
                             if (!('toDoList' in item)) {
                                 return { ...item, toDoList: [] };
                             } else {
@@ -54,6 +54,7 @@ class App extends React.PureComponent {
                     }
                     this.setState({
                         lists: updateData,
+                        activeToDoListId: data.activetodolistid ? data.activetodolistid : null,
                         user: uid,
                         loadingData: false
                     });
@@ -104,6 +105,7 @@ class App extends React.PureComponent {
             const before = lists.slice(0, idx);
             const after = lists.slice(idx + 1);
             if (id === this.state.activeToDoListId) {
+                this.sendActiveToDoListIdToDB(this.state.user, null);
                 return {
                     lists: [...before, ...after],
                     activeToDoListId: null
@@ -136,6 +138,7 @@ class App extends React.PureComponent {
         this.setState({
             activeToDoListId: id
         })
+        this.sendActiveToDoListIdToDB(this.state.user, id);
     }
 
     updateToDoList = (toDoList) => {
@@ -204,9 +207,17 @@ class App extends React.PureComponent {
 
     sendListToDB = (uid, newLists, newUser) => {
         if (this.state.user || newUser) {
-            firebase.database().ref(`users/${uid}`).set({
+            firebase.database().ref(`users/${uid}`).update({
                 lists: newLists
             });
+        }
+    }
+
+    sendActiveToDoListIdToDB = (uid, id) => {
+        if (this.state.user) {
+            firebase.database().ref(`users/${uid}`).update({
+                activetodolistid: id
+            })
         }
     }
 

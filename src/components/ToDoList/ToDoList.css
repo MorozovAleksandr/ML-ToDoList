@@ -13,3 +13,17 @@
     flex-direction: column;
     margin-bottom: 70px;
 }
+
+.todolist__counts {
+    padding: 0 35px;
+    font-size: 20px;
+}
+
+.todolist__counts__item {
+    margin: 5px 0;
+}
+
+.todolist__counts__item_count {
+    font-weight: 500;
+    color: #3CE6B0;
+}

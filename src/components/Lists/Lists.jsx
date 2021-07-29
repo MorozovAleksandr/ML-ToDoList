@@ -41,15 +41,19 @@ class Lists extends React.PureComponent {
 
     render() {
         const myLists = this.props.lists.map(item => {
+            let needsDone = 0;
+            item.toDoList.forEach(task => {
+                if (!task.done) needsDone += 1;
+            })
             return (
-                <List id={item.id} label={item.label} key={item.id} />
+                <List id={item.id} needsDone={needsDone} label={item.label} key={item.id} />
             )
         });
         return (
-            <div className="lists">
+            <div className="lists" >
                 <h1 className="lists__title">Списки:</h1>
                 {myLists}
-                <div className="lists__addListButton" onClick={this.onClickAddList}>
+                <div className="lists__addListButton" onClick={this.onClickAddList} >
                     <IconButton color="inherit" aria-label="add List">
                         <PlaylistAddIcon fontSize="medium" />
                     </IconButton>
@@ -60,7 +64,7 @@ class Lists extends React.PureComponent {
                     this.state.showFormAddList &&
                     <CreateListItem />
                 }
-            </div>
+            </div >
         )
     }
 }

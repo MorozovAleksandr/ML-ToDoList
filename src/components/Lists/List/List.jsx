@@ -1,6 +1,5 @@
 import React from "react";
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -66,8 +65,14 @@ class List extends React.PureComponent {
         return (
             <div>
                 <ListItem className="list__item" onClick={() => { myEvents.emit('EupdateActiveTodoListId', this.props.id); }} button>
-                    <ListItemText primary={this.props.label} />
                     <div>
+                        {this.props.label}
+                        {
+                            this.props.needsDone !== 0 &&
+                            <span className="list__item_needsDone">{this.props.needsDone}</span>
+                        }
+                    </div>
+                    <div className="list__wrapper__list__buttonMenu">
                         <IconButton className="list__buttonMenu" aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
                             <MoreVertIcon />
                         </IconButton>
