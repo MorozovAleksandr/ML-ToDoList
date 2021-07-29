@@ -7,6 +7,7 @@ import { myEvents } from '../../events';
 import { Route } from 'react-router-dom';
 import SignIn from '../LogIn/SignIn/SignIn.jsx';
 import Registration from '../LogIn/Registration/Registration.jsx';
+import UpdatePassword from '../LogIn/UpdatePassword/UpdatePassword.jsx';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import firebase from 'firebase/app';
 import crypto from "crypto";
@@ -233,6 +234,7 @@ class App extends React.PureComponent {
 
                 <Route path="/signin" component={SignIn} />
                 <Route path="/signup" component={Registration} />
+                <Route path="/updatepassword" component={UpdatePassword} />
                 <Route path="/" exact render={() =>
                     <div>
                         <LogIn user={this.state.user} />

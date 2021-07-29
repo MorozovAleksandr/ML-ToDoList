@@ -71,6 +71,7 @@ class EditToDoListItem extends React.PureComponent {
                             type="text"
                             fullWidth
                             value={this.state.label}
+                            autoComplete="off"
                             onKeyPress={this.onKeyPressHandler}
                         />
                     </DialogContent>

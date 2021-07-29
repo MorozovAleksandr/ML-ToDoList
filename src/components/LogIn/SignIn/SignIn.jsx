@@ -104,7 +104,6 @@ function SignIn(props) {
                 props.history.push("/");
             })
             .catch(error => {
-                console.log(error);
                 setError(error.message);
                 setSigninAccountStatus(2);
             });

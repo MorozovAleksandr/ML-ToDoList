@@ -1,6 +1,11 @@
 import React, { Fragment } from "react";
-import s from './LogIn.module.css';
+import './LogIn.css';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Fade from '@material-ui/core/Fade';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { NavLink } from 'react-router-dom';
 import { myEvents } from '../../events';
 
@@ -9,7 +14,8 @@ class LogIn extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            user: this.props.user
+            user: this.props.user,
+            anchorEl: null
         }
     }
 
@@ -21,27 +27,56 @@ class LogIn extends React.PureComponent {
         }
     }
 
+    handleClick = (e) => {
+        e.stopPropagation();
+        this.setState({
+            anchorEl: e.currentTarget
+        })
+    };
+
+    handleClose = () => {
+        this.setState({
+            anchorEl: null
+        })
+    };
+
     signOut = () => {
         myEvents.emit("EsignOut");
     }
 
     render() {
+        const open = Boolean(this.state.anchorEl);
         return (
-            <div className={s.signInWrapper}>
+            <div className="signInWrapper">
                 {this.state.user
                     ?
-                    <Button onClick={this.signOut} className={s.signInButton} variant="contained" color="primary">
-                        Выйти
-                    </Button>
+                    <div className="login__userMenu">
+                        <IconButton className="login__buttonMenu" aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
+                            <AccountBoxIcon />
+                        </IconButton>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={this.state.anchorEl}
+                            keepMounted
+                            open={open}
+                            onClose={this.handleClose}
+                            TransitionComponent={Fade}
+                        >
+                            <NavLink to="/updatepassword" className="logIn__link logIn__link_changepassword" activeClassName="SActivated">
+                                <MenuItem>Изменить пароль</MenuItem>
+                            </NavLink>
+                            <MenuItem onClick={this.signOut}>Выйти</MenuItem>
+                        </Menu>
+                    </div>
                     :
                     <Fragment>
-                        <NavLink to="/signin" className={s.logIn__link} activeClassName="SActivated">
-                            <Button className={s.signInButton} variant="contained" color="primary">
+                        <NavLink to="/signin" className="logIn__link" activeClassName="SActivated">
+                            <Button className="signInButton" variant="contained" color="primary">
                                 Войти
                             </Button>
                         </NavLink>
-                        <NavLink to="/signup" className={s.logIn__link} activeClassName="SActivated">
-                            <Button className={s.signInButton} variant="contained" color="primary">
+                        <NavLink to="/signup" className="logIn__link" activeClassName="SActivated">
+                            <Button className="signInButton" variant="contained" color="primary">
                                 Регистрация
                             </Button>
                         </NavLink>
@@ -53,65 +88,3 @@ class LogIn extends React.PureComponent {
 }
 
 export default LogIn;
-
-/* import React from "react";
-import s from './LogIn.module.css';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import { NavLink } from 'react-router-dom';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
-class LogIn extends React.PureComponent {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: true
-        }
-    }
-
-    handleClose = () => {
-        this.setState({
-            open: false
-        })
-    }
-
-    testOnclick = (text) => {
-        console.log(text);
-        this.handleClose();
-    }
-
-    render() {
-        return (
-            <Dialog
-                open={this.state.open}
-                TransitionComponent={Transition}
-                keepMounted
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle className={s.signIn__title} id="alert-dialog-slide-title">{"Для продолжения работы войдите или зарегестрируйтесь"}</DialogTitle>
-                <DialogContent className={s.signIn__wrapper}>
-                    <NavLink to="/signin" className={s.logIn__link} activeClassName="SActivated">
-                        <Button onClick={() => { this.testOnclick('Sign In') }} className={s.signInButton} variant="contained" color="primary">
-                            Войти
-                        </Button>
-                    </NavLink>
-                    <NavLink to="/signup" className={s.logIn__link} activeClassName="SActivated">
-                        <Button onClick={() => { this.testOnclick('Registation') }} className={s.signInButton} variant="contained" color="primary">
-                            Регистрация
-                        </Button>
-                    </NavLink>
-                </DialogContent>
-            </Dialog>
-        )
-    }
-}
-
-export default LogIn; */

@@ -28,7 +28,7 @@ class AddToDoItem extends React.PureComponent {
     render() {
         return (
             <form className="addToDoItem" onSubmit={this.onSubmit}>
-                <TextField className="addToDoItem__input" onChange={this.onLabelChange} id="standard-basic" value={this.state.label} label="Что должно быть сделано" />
+                <TextField className="addToDoItem__input" autoComplete="off" onChange={this.onLabelChange} id="standard-basic" value={this.state.label} label="Что должно быть сделано" />
                 <Button className="addToDoItem__button" type='submit' variant="contained" color="primary">
                     Добавить
                 </Button>

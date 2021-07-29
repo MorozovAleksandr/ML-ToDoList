@@ -64,7 +64,7 @@ class Lists extends React.PureComponent {
                     this.state.showFormAddList &&
                     <CreateListItem />
                 }
-            </div >
+            </div>
         )
     }
 }

@@ -72,6 +72,7 @@ class EditListItem extends React.PureComponent {
                             fullWidth
                             value={this.state.label}
                             onKeyPress={this.onKeyPressHandler}
+                            autoComplete="off"
                         />
                     </DialogContent>
                     <DialogActions>
