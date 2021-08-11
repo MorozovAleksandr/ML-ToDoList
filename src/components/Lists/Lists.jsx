@@ -1,72 +1,74 @@
-import React from "react";
-import CreateListItem from "./CreateListItem/CreateListItem";
+import React, { useState } from "react";
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import IconButton from '@material-ui/core/IconButton';
+import { addToDoList } from '../../redux/action/action';
+import { connect } from "react-redux";
+import withTodoListService from "../hoc/withTodoListService";
+import EditForm from "../EditForm/EditForm";
+import List from './List/List';
 import './Lists.css'
-import List from "./List/List";
-import { myEvents } from '../../events';
 
-class Lists extends React.PureComponent {
+const Lists = ({ lists, addToDoList, user }) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showFormAddList: false
-        }
+    const [showFormAddList, setShowFormAddList] = useState(false);
+
+    const onClickAddList = () => {
+        setShowFormAddList(true);
     }
 
-    componentDidMount() {
-        myEvents.addListener("EonCloseAddListForm", this.onCloseAddListForm);
+    const onCloseAddListForm = () => {
+        setShowFormAddList(false);
     }
 
-    componentWillUnmount() {
-        myEvents.removeListener("EonCloseAddListForm", this.onCloseAddListForm);
+    const onSaveAddList = (label) => {
+        addToDoList(user, lists, label);
+        onCloseAddListForm()
     }
 
-    onClickAddList = () => {
-        this.setState({
-            showFormAddList: true
+    const myLists = lists.map(item => {
+        let needsDone = 0;
+        item.toDoList.forEach(task => {
+            if (!task.done) needsDone += 1;
         })
-    }
-
-    onCloseAddListForm = () => {
-        this.setState({
-            showFormAddList: false
-        })
-    }
-
-    onClickAddList = () => {
-        this.setState({ showFormAddList: true })
-    }
-
-    render() {
-        const myLists = this.props.lists.map(item => {
-            let needsDone = 0;
-            item.toDoList.forEach(task => {
-                if (!task.done) needsDone += 1;
-            })
-            return (
-                <List id={item.id} needsDone={needsDone} label={item.label} key={item.id} />
-            )
-        });
         return (
-            <div className="lists" >
-                <h1 className="lists__title">Списки:</h1>
-                {myLists}
-                <div className="lists__addListButton" onClick={this.onClickAddList} >
-                    <IconButton color="inherit" aria-label="add List">
-                        <PlaylistAddIcon fontSize="medium" />
-                    </IconButton>
-                    <span>Добавить список</span>
-                </div>
-
-                {
-                    this.state.showFormAddList &&
-                    <CreateListItem />
-                }
-            </div>
+            <List id={item.id} needsDone={needsDone} label={item.label} key={item.id} />
         )
+    });
+
+    return (
+        <div className="lists" >
+            <h1 className="lists__title">Списки:</h1>
+            {myLists}
+            <div className="lists__addListButton" onClick={onClickAddList} >
+                <IconButton color="inherit" aria-label="add List">
+                    <PlaylistAddIcon fontSize="medium" />
+                </IconButton>
+                <span>Добавить список</span>
+            </div>
+
+            {
+                showFormAddList &&
+                <EditForm initialLabel={''} title="Новый список" text="Название списка" eventSave={onSaveAddList} eventClose={onCloseAddListForm} />
+            }
+        </div>
+    )
+}
+
+const mapStateToProps = ({ user, lists }) => {
+    return {
+        user,
+        lists
     }
 }
 
-export default Lists;
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { todolistService } = ownProps;
+    return {
+        addToDoList: (user, lists, label) => {
+            return addToDoList(todolistService, label, user, lists, dispatch)
+        }
+    }
+}
+
+
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(Lists));

@@ -1,30 +1,47 @@
-import React from 'react'; import IconButton from '@material-ui/core/IconButton';
+import React, { useState } from 'react'; import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import StarIcon from '@material-ui/icons/Star';
-import { togglePropertyOrDeleteSubTask } from '../../../../../redux/action/action';
+import { workWithSubTask } from '../../../../../redux/action/action';
 
 import './ToDoListItemSubTaskItem.css';
 import { connect } from 'react-redux';
 import withTodoListService from '../../../../hoc/withTodoListService';
+import EditForm from '../../../../EditForm/EditForm';
 
-const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, user, lists, togglePropertyOrDeleteSubTask }) => {
+const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, user, lists, workWithSubTask }) => {
+
+    const [showFormEdit, setShowFormEdit] = useState(false);
 
     const onClickDone = (e) => {
         e.stopPropagation();
-        togglePropertyOrDeleteSubTask(id, taskId, listId, user, lists, 'done');
+        workWithSubTask(id, taskId, listId, user, lists, 'done');
     }
 
     const onClickImportant = (e) => {
         e.stopPropagation();
-        togglePropertyOrDeleteSubTask(id, taskId, listId, user, lists, 'important');
+        workWithSubTask(id, taskId, listId, user, lists, 'important');
     }
 
     const onClickDelete = (e) => {
         e.stopPropagation();
-        togglePropertyOrDeleteSubTask(id, taskId, listId, user, lists);
+        workWithSubTask(id, taskId, listId, user, lists);
 
+    }
+
+    const onClickEdit = (e) => {
+        e.stopPropagation();
+        setShowFormEdit(true);
+    }
+
+    const onCloseEdit = () => {
+        setShowFormEdit(false);
+    }
+
+    const onSaveEdit = (label) => {
+        workWithSubTask(id, taskId, listId, user, lists, null, label);
+        onCloseEdit();
     }
 
     return (
@@ -39,13 +56,17 @@ const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, u
                 <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${important ? `important` : ``}`} onClick={onClickImportant} color="inherit" aria-label="edit">
                     <StarIcon fontSize="medium" />
                 </IconButton>
-                <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={() => { console.log('EDIT SUBTASK') }} color="inherit" aria-label="edit">
+                <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={onClickEdit} color="inherit" aria-label="edit">
                     <EditIcon fontSize="medium" />
                 </IconButton>
                 <IconButton className="ToDoListItem__button" onClick={onClickDelete} color="inherit" aria-label="delete">
                     <DeleteOutlinedIcon fontSize="medium" />
                 </IconButton>
             </div>
+            {
+                showFormEdit &&
+                <EditForm initialLabel={label} title="Редактирование подзадачи" text="Подзадача" eventSave={onSaveEdit} eventClose={onCloseEdit} />
+            }
         </div>
     );
 };
@@ -60,8 +81,8 @@ const mapStateToProps = ({ user, lists }) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     const { todolistService } = ownProps;
     return {
-        togglePropertyOrDeleteSubTask: (id, taskId, listId, user, lists, property) => {
-            return togglePropertyOrDeleteSubTask(todolistService, id, taskId, listId, user, lists, dispatch, property)
+        workWithSubTask: (id, taskId, listId, user, lists, property, label) => {
+            return workWithSubTask(todolistService, id, taskId, listId, user, lists, dispatch, property, label)
         }
     }
 }

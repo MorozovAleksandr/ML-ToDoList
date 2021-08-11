@@ -1,5 +1,5 @@
 .MuiDialog-paper {
-    background-color: rgba(50, 50, 50, 0.7) !important;
+    background-color: rgba(50, 50, 50, 0.95) !important;
 }
 
 .MuiDialog-paperWidthSm {
@@ -10,7 +10,7 @@
     color: white;
 }
 
-.saveEditToDoListItemButton {
+.saveButton {
     background-color: #3CE6B0 !important;
     color: black !important;
 }

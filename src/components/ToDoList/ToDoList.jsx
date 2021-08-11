@@ -3,11 +3,11 @@ import './ToDoList.css'
 import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
 import crypto from "crypto";
-import EditToDoListItem from "./EditToDoListItem/EditToDoListItem";
 import { updateToDoList } from "./../../redux/action/action";
 import { myEvents } from '../../events';
 import { connect } from "react-redux";
 import withTodoListService from "../hoc/withTodoListService";
+import EditForm from "../EditForm/EditForm";
 
 class ToDoList extends React.PureComponent {
 
@@ -21,7 +21,6 @@ class ToDoList extends React.PureComponent {
 
     componentDidMount() {
         myEvents.addListener("EaddItem", this.addItem);
-        myEvents.addListener("EupdateToDoListItem", this.updateToDoListItem);
         myEvents.addListener("EdeleteItem", this.deleteItem);
         myEvents.addListener("EtogglePropertyItem", this.togglePropertyItem);
         myEvents.addListener("EupdateEditToDoListItemId", this.updateEditToDoListItemId);
@@ -38,7 +37,6 @@ class ToDoList extends React.PureComponent {
 
     componentWillUnmount() {
         myEvents.removeListener("EaddItem", this.addItem);
-        myEvents.removeListener("EupdateToDoListItem", this.updateToDoListItem);
         myEvents.removeListener("EdeleteItem", this.deleteItem);
         myEvents.removeListener("EtogglePropertyItem", this.togglePropertyItem);
         myEvents.removeListener("EupdateEditToDoListItemId", this.updateEditToDoListItemId);
@@ -88,6 +86,16 @@ class ToDoList extends React.PureComponent {
         this.props.updateToDoList(this.props.activeToDoListId, this.props.user, this.props.lists, newtoDoList);
     }
 
+    onSaveEditListItem = (label) => {
+        const editToDoListItem = this.state.toDoList.find(item => item.id === this.state.editToDoListItemId);
+        const newToDoListItem = { ...editToDoListItem, label: label };
+        this.updateToDoListItem(newToDoListItem, newToDoListItem.id);
+    }
+
+    onCloseEditListItem = () => {
+        this.updateEditToDoListItemId(null);
+    }
+
     updateEditToDoListItemId = (id) => {
         this.setState({
             editToDoListItemId: id
@@ -98,6 +106,7 @@ class ToDoList extends React.PureComponent {
         const doneCount = this.state.toDoList.filter(el => el.done).length;
         const toDoCount = this.state.toDoList.length - doneCount;
         const elements = this.state.toDoList.map(item => <ToDoListItem key={item.id} item={item} />);
+        const editToDoListItem = this.state.toDoList.find(item => item.id === this.state.editToDoListItemId);
         return (
             <div className="todolist">
                 <h1 className="todolist__name">
@@ -116,7 +125,7 @@ class ToDoList extends React.PureComponent {
                 <AddToDoItem />
                 {
                     this.state.editToDoListItemId &&
-                    <EditToDoListItem activeToDoList={this.props.activeToDoList.label} editToDoListItem={this.state.toDoList.find(item => item.id === this.state.editToDoListItemId)} />
+                    <EditForm initialLabel={editToDoListItem.label} title={this.props.activeToDoList.label} text="Задача" eventSave={this.onSaveEditListItem} eventClose={this.onCloseEditListItem} />
                 }
             </div>
         )

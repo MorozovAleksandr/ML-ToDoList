@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
@@ -6,100 +6,82 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Fade from '@material-ui/core/Fade';
 import './List.css';
-import EditListItem from "./EditListItem/EditListItem";
 import withTodoListService from '../../hoc/withTodoListService';
-import { myEvents } from '../../../events';
 import { connect } from "react-redux";
-import { updateActiveTodoListId, deleteToDoList } from '../../../redux/action/action'
+import { updateActiveTodoListId, deleteToDoList, updateToDoListLabel } from '../../../redux/action/action'
+import EditForm from "../../EditForm/EditForm";
 
-class List extends React.PureComponent {
+const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoListLabel, deleteToDoList, updateActiveTodoListId }) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            anchorEl: null,
-            showFormEditListItem: false
-        }
-    }
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [showFormEditListItem, setShowFormEditListItem] = useState(false);
 
-    componentDidMount() {
-        myEvents.addListener("EcloseFormEditListItem", this.closeFormEditListItem);
-    }
+    const open = Boolean(anchorEl);
 
-    componentWillUnmount() {
-        myEvents.removeListener("EcloseFormEditListItem", this.closeFormEditListItem);
-    }
-
-    handleClick = (e) => {
+    const handleClick = (e) => {
         e.stopPropagation();
-        this.setState({
-            anchorEl: e.currentTarget
-        })
+        setAnchorEl(e.currentTarget);
     };
 
-    handleClose = () => {
-        this.setState({
-            anchorEl: null
-        })
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
-    onClickDeleteItem = (e) => {
+    const onClickDeleteItem = (e) => {
         e.stopPropagation();
-        this.props.deleteToDoList(this.props.id, this.props.lists, this.props.user, this.props.activeToDoListId)
-        this.handleClose();
+        deleteToDoList(id, lists, user, activeToDoListId)
+        handleClose();
     }
 
-    onClickEditItem = (e) => {
+    const onClickEditItem = (e) => {
         e.stopPropagation();
-        this.setState({
-            showFormEditListItem: true
-        })
-        this.handleClose();
+        setShowFormEditListItem(true);
+        handleClose();
     }
 
-    closeFormEditListItem = () => {
-        this.setState({
-            showFormEditListItem: false
-        })
+    const onSaveEdit = (label) => {
+        updateToDoListLabel(id, label, user, lists)
+        closeFormEditListItem()
     }
 
-    render() {
-        const open = Boolean(this.state.anchorEl);
-        return (
-            <div>
-                <ListItem className="list__item" onClick={() => { this.props.updateActiveTodoListId(this.props.id, this.props.user) }} button>
-                    <div>
-                        {this.props.label}
-                        {
-                            this.props.needsDone !== 0 &&
-                            <span className="list__item_needsDone">{this.props.needsDone}</span>
-                        }
-                    </div>
-                    <div className="list__wrapper__list__buttonMenu">
-                        <IconButton className="list__buttonMenu" aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
-                            <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={this.state.anchorEl}
-                            keepMounted
-                            open={open}
-                            onClose={this.handleClose}
-                            TransitionComponent={Fade}
-                        >
-                            <MenuItem onClick={this.onClickEditItem}>Редактировать</MenuItem>
-                            <MenuItem onClick={this.onClickDeleteItem}>Удалить</MenuItem>
-                        </Menu>
-                    </div>
-                </ListItem>
-
-                {
-                    this.state.showFormEditListItem &&
-                    <EditListItem id={this.props.id} label={this.props.label} />
-                }
-            </div>
-        )
+    const closeFormEditListItem = () => {
+        setShowFormEditListItem(false);
     }
+
+    return (
+        <div>
+            <ListItem className="list__item" onClick={() => { updateActiveTodoListId(id, user) }} button>
+                <div>
+                    {label}
+                    {
+                        needsDone !== 0 &&
+                        <span className="list__item_needsDone">{needsDone}</span>
+                    }
+                </div>
+                <div className="list__wrapper__list__buttonMenu">
+                    <IconButton className="list__buttonMenu" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                        TransitionComponent={Fade}
+                    >
+                        <MenuItem onClick={onClickEditItem}>Редактировать</MenuItem>
+                        <MenuItem onClick={onClickDeleteItem}>Удалить</MenuItem>
+                    </Menu>
+                </div>
+            </ListItem>
+
+            {
+                showFormEditListItem &&
+                <EditForm initialLabel={label} title="Редактирование списка" text="Название списка" eventSave={onSaveEdit} eventClose={closeFormEditListItem} />
+            }
+        </div>
+    )
 }
 
 const mapStateToProps = ({ user, activeToDoListId, lists }) => {
@@ -118,8 +100,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         deleteToDoList: (id, lists, user, activeToDoListId) => {
             return deleteToDoList(todolistService, id, lists, user, activeToDoListId, dispatch)
+        },
+        updateToDoListLabel: (id, label, user, lists) => {
+            return updateToDoListLabel(todolistService, id, label, user, lists, dispatch)
         }
-
     }
 }
 

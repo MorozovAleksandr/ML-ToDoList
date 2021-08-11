@@ -99,7 +99,7 @@ const addSubTask = (todoListService, subtask, user, lists, activeToDoListId, tas
     todoListService.sendListToDB(user, newLists);
 }
 
-const togglePropertyOrDeleteSubTask = (todoListService, id, taskId, listId, user, lists, dispatch, property = null) => {
+const workWithSubTask = (todoListService, id, taskId, listId, user, lists, dispatch, property = null, label = null) => {
     const idx = lists.findIndex(item => item.id === listId); // id списка
     const before = lists.slice(0, idx); // до списка
     const after = lists.slice(idx + 1); // после списка
@@ -112,9 +112,10 @@ const togglePropertyOrDeleteSubTask = (todoListService, id, taskId, listId, user
     const beforeSubTask = lists[idx].toDoList[idxTask].subtask.slice(0, idxSubTask); // до подзадачи
     const afterSubTask = lists[idx].toDoList[idxTask].subtask.slice(idxSubTask + 1); // после подзадачи
     const oldSubTask = lists[idx].toDoList[idxTask].subtask[idxSubTask]; // старая подзадача
-    const newSubTask = { ...oldSubTask, [property]: !oldSubTask[property] }; // новая подзадача, обновили свойство
+    let newSubTask; // новая подзадача, обновили свойство
     let updateTask;
     if (property) { // если нужно заменить свойство
+        newSubTask = { ...oldSubTask, [property]: !oldSubTask[property] }; // новая подзадача, обновили свойство
         updateTask = {
             ...lists[idx].toDoList[idxTask],
             subtask: [
@@ -125,7 +126,23 @@ const togglePropertyOrDeleteSubTask = (todoListService, id, taskId, listId, user
                 ...afterSubTask
             ]
         };
-    } else { // если нужно удалить подзадачу
+    }
+
+    if (label) { // если нужно изменить задачу
+        newSubTask = { ...oldSubTask, label: label }; // новая подзадача, обновили свойство
+        updateTask = {
+            ...lists[idx].toDoList[idxTask],
+            subtask: [
+                ...beforeSubTask,
+                {
+                    ...newSubTask
+                },
+                ...afterSubTask
+            ]
+        };
+    }
+
+    if (!label && !property) { // если нужно удалить подзадачу
         updateTask = {
             ...lists[idx].toDoList[idxTask],
             subtask: [
@@ -221,5 +238,5 @@ export {
     updateToDoListLabel,
     updateToDoList,
     addSubTask,
-    togglePropertyOrDeleteSubTask
+    workWithSubTask
 }

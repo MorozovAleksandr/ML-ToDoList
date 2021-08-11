@@ -124,7 +124,6 @@ class App extends React.Component {
                         <CircularProgress className="circularProgress" />
                     </div>
                 }
-
                 <Route path="/signin" component={SignIn} />
                 <Route path="/signup" component={Registration} />
                 <Route path="/updatepassword" component={UpdatePassword} />
