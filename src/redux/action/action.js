@@ -72,7 +72,7 @@ const addSubTask = (todoListService, subtask, user, lists, activeToDoListId, tas
     const beforeTask = lists[idx].toDoList.slice(0, idxTask);
     const afterTask = lists[idx].toDoList.slice(idxTask + 1);
 
-    if ([...lists[idx].toDoList[idxTask].subtask].length >= 10) {
+    if (lists[idx].toDoList[idxTask].subtask && [...lists[idx].toDoList[idxTask].subtask].length >= 10) {
         return;
     }
 
