@@ -7,7 +7,10 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Fade from '@material-ui/core/Fade';
 import './List.css';
 import EditListItem from "./EditListItem/EditListItem";
+import withTodoListService from '../../hoc/withTodoListService';
 import { myEvents } from '../../../events';
+import { connect } from "react-redux";
+import { updateActiveTodoListId, deleteToDoList } from '../../../redux/action/action'
 
 class List extends React.PureComponent {
 
@@ -42,7 +45,7 @@ class List extends React.PureComponent {
 
     onClickDeleteItem = (e) => {
         e.stopPropagation();
-        myEvents.emit('EdeleteToDoList', this.props.id);
+        this.props.deleteToDoList(this.props.id, this.props.lists, this.props.user, this.props.activeToDoListId)
         this.handleClose();
     }
 
@@ -64,7 +67,7 @@ class List extends React.PureComponent {
         const open = Boolean(this.state.anchorEl);
         return (
             <div>
-                <ListItem className="list__item" onClick={() => { myEvents.emit('EupdateActiveTodoListId', this.props.id); }} button>
+                <ListItem className="list__item" onClick={() => { this.props.updateActiveTodoListId(this.props.id, this.props.user) }} button>
                     <div>
                         {this.props.label}
                         {
@@ -99,4 +102,25 @@ class List extends React.PureComponent {
     }
 }
 
-export default List;
+const mapStateToProps = ({ user, activeToDoListId, lists }) => {
+    return {
+        user,
+        activeToDoListId,
+        lists
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { todolistService } = ownProps;
+    return {
+        updateActiveTodoListId: (id, user) => {
+            return updateActiveTodoListId(todolistService, dispatch, user, id)
+        },
+        deleteToDoList: (id, lists, user, activeToDoListId) => {
+            return deleteToDoList(todolistService, id, lists, user, activeToDoListId, dispatch)
+        }
+
+    }
+}
+
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(List));

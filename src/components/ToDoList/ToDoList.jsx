@@ -4,7 +4,10 @@ import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
 import crypto from "crypto";
 import EditToDoListItem from "./EditToDoListItem/EditToDoListItem";
+import { updateToDoList } from "./../../redux/action/action";
 import { myEvents } from '../../events';
+import { connect } from "react-redux";
+import withTodoListService from "../hoc/withTodoListService";
 
 class ToDoList extends React.PureComponent {
 
@@ -46,13 +49,14 @@ class ToDoList extends React.PureComponent {
             label: label,
             important: false,
             done: false,
+            subtask: null,
             id: crypto.randomBytes(3).toString("hex")
         }
     };
 
     addItem = (item) => {
         const newtoDoList = [...this.state.toDoList, this.createTodoItem(item)];
-        myEvents.emit('EupdateToDoList', newtoDoList);
+        this.props.updateToDoList(this.props.activeToDoListId, this.props.user, this.props.lists, newtoDoList);
     }
 
     updateToDoListItem = (item, id) => {
@@ -60,7 +64,7 @@ class ToDoList extends React.PureComponent {
         const before = this.state.toDoList.slice(0, idx);
         const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, item, ...after];
-        myEvents.emit('EupdateToDoList', newtoDoList);
+        this.props.updateToDoList(this.props.activeToDoListId, this.props.user, this.props.lists, newtoDoList);
         this.setState({
             editToDoListItemId: null
         });
@@ -71,7 +75,7 @@ class ToDoList extends React.PureComponent {
         const before = this.state.toDoList.slice(0, idx);
         const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, ...after];
-        myEvents.emit('EupdateToDoList', newtoDoList);
+        this.props.updateToDoList(this.props.activeToDoListId, this.props.user, this.props.lists, newtoDoList);
     }
 
     togglePropertyItem = (id, property) => {
@@ -81,7 +85,7 @@ class ToDoList extends React.PureComponent {
         const before = this.state.toDoList.slice(0, idx);
         const after = this.state.toDoList.slice(idx + 1);
         const newtoDoList = [...before, newItem, ...after];
-        myEvents.emit('EupdateToDoList', newtoDoList);
+        this.props.updateToDoList(this.props.activeToDoListId, this.props.user, this.props.lists, newtoDoList);
     }
 
     updateEditToDoListItemId = (id) => {
@@ -119,4 +123,24 @@ class ToDoList extends React.PureComponent {
     }
 }
 
-export default ToDoList;
+const mapStateToProps = ({ activeToDoListId, user, lists }) => {
+    return {
+        activeToDoListId,
+        user,
+        lists
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { todolistService } = ownProps;
+    return {
+        updateToDoList: (activeToDoListId, user, lists, toDoList) => {
+            return updateToDoList(todolistService, activeToDoListId, user, lists, toDoList, dispatch)
+        }
+
+    }
+}
+
+
+
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(ToDoList));

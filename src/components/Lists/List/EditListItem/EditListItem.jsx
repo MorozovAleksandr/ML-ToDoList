@@ -9,6 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import SaveIcon from '@material-ui/icons/Save';
 import Slide from '@material-ui/core/Slide';
 import { myEvents } from '../../../../events';
+import { connect } from "react-redux";
+import withTodoListService from "../../../hoc/withTodoListService";
+import { updateToDoListLabel } from "../../../../redux/action/action"
 
 const Transition = React.forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -28,7 +31,7 @@ class EditListItem extends React.PureComponent {
     }
 
     onSave = () => {
-        myEvents.emit('EupdateToDoListLabel', this.props.id, this.state.label);
+        this.props.updateToDoListLabel(this.props.id, this.state.label, this.props.user, this.props.lists);
         myEvents.emit('EcloseFormEditListItem');
         this.setState({ open: false });
     };
@@ -95,4 +98,20 @@ class EditListItem extends React.PureComponent {
     }
 }
 
-export default EditListItem;
+const mapStateToProps = ({ user, lists }) => {
+    return {
+        user,
+        lists
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { todolistService } = ownProps;
+    return {
+        updateToDoListLabel: (id, label, user, lists) => {
+            return updateToDoListLabel(todolistService, id, label, user, lists, dispatch)
+        }
+    }
+}
+
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(EditListItem));

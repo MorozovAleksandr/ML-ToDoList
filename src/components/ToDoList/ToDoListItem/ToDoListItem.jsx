@@ -5,11 +5,17 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import StarIcon from '@material-ui/icons/Star';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { myEvents } from '../../../events';
+import ToDoListItemSubTask from "./ToDoListItemSubTask/ToDoListItemSubTask";
 
 class ToDoListItem extends React.PureComponent {
 
     onClickDone = (e) => {
+        e.stopPropagation();
         myEvents.emit('EtogglePropertyItem', this.props.item.id, 'done');
     }
 
@@ -30,25 +36,38 @@ class ToDoListItem extends React.PureComponent {
 
     render() {
         return (
-            <div className={`ToDoListItem ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`} onClick={this.onClickDone} >
-                <div className="ToDoListItem__leftBlock">
-                    <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={this.onClickDone} color="inherit" aria-label="delete">
-                        <CheckIcon fontSize="small" />
-                    </IconButton>
-                    {this.props.item.label}
-                </div>
-                <div className="ToDoListItem__buttons">
-                    <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${this.props.item.important ? `important` : ``}`} onClick={this.onClickImportant} color="inherit" aria-label="edit">
-                        <StarIcon fontSize="medium" />
-                    </IconButton>
-                    <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={this.onClickEdit} color="inherit" aria-label="edit">
-                        <EditIcon fontSize="medium" />
-                    </IconButton>
-                    <IconButton className="ToDoListItem__button" onClick={this.onClickDelete} color="inherit" aria-label="delete">
-                        <DeleteOutlinedIcon fontSize="medium" />
-                    </IconButton>
-                </div>
-            </div>
+            <Accordion className={`ToDoListItem__Accordion ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    className="ToDoListItem__Accordion_grid"
+                >
+                    <div className={`ToDoListItem ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`} >
+                        <div className="ToDoListItem__leftBlock">
+                            <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={this.onClickDone} color="inherit" aria-label="delete">
+                                <CheckIcon fontSize="small" />
+                            </IconButton>
+                            {this.props.item.label}
+                        </div>
+                        <div className="ToDoListItem__buttons">
+                            <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${this.props.item.important ? `important` : ``}`} onClick={this.onClickImportant} color="inherit" aria-label="edit">
+                                <StarIcon fontSize="medium" />
+                            </IconButton>
+                            <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={this.onClickEdit} color="inherit" aria-label="edit">
+                                <EditIcon fontSize="medium" />
+                            </IconButton>
+                            <IconButton className="ToDoListItem__button" onClick={this.onClickDelete} color="inherit" aria-label="delete">
+                                <DeleteOutlinedIcon fontSize="medium" />
+                            </IconButton>
+                        </div>
+                    </div>
+                </AccordionSummary>
+                <AccordionDetails className="ToDoListItem__details">
+                    <ToDoListItemSubTask toDoListItem={this.props.item} />
+                </AccordionDetails>
+            </Accordion>
+
         )
     }
 }

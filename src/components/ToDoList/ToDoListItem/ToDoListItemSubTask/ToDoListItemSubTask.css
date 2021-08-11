@@ -1,0 +1,12 @@
+.ToDoListItemSubTask {
+    margin-bottom: 10px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 50%);
+    box-sizing: border-box;
+}
+
+.ToDoListItemSubTask__renderSubTask {
+    display: flex;
+    flex-direction: column;
+}

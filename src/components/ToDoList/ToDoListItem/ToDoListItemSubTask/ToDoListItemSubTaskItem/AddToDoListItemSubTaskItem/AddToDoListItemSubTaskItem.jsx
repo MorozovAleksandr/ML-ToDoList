@@ -1,5 +1,5 @@
 import React from "react";
-import './CreateListItem.css'
+import './AddToDoListItemSubTaskItem.css'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,16 +8,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import SaveIcon from '@material-ui/icons/Save';
 import Slide from '@material-ui/core/Slide';
-import { addToDoList } from '../../../redux/action/action'
-import { myEvents } from '../../../events';
+import { addSubTask } from '../../../../../../redux/action/action'
 import { connect } from "react-redux";
-import withTodoListService from "../../hoc/withTodoListService";
+import crypto from "crypto";
+import withTodoListService from "../../../../../hoc/withTodoListService";
 
 const Transition = React.forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-class CreateListItem extends React.PureComponent {
+class AddToDoListItemSubTaskItem extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,13 +26,25 @@ class CreateListItem extends React.PureComponent {
         }
     }
 
+    createSubTask = (label) => {
+        return {
+            label: label,
+            important: false,
+            done: false,
+            taskId: this.props.taskId,
+            listId: this.props.activeToDoListId,
+            id: crypto.randomBytes(3).toString("hex")
+        }
+    };
+
     onLabelChange = (e) => {
         this.setState({ label: e.target.value });
     }
 
     onSave = () => {
-        this.props.addToDoList(this.props.user, this.props.lists, this.state.label);
-        myEvents.emit('EonCloseAddListForm');
+        const subTask = this.createSubTask(this.state.label)
+        this.props.addSubTask(subTask, this.props.user, this.props.lists, this.props.activeToDoListId, this.props.taskId)
+        this.props.cbOnCloseAddSubTaskForm();
         this.setState({ open: false });
     };
 
@@ -41,7 +53,7 @@ class CreateListItem extends React.PureComponent {
             label: '',
             open: false
         });
-        myEvents.emit('EonCloseAddListForm');
+        this.props.cbOnCloseAddSubTaskForm();
     };
 
     onKeyPressHandler = (event) => {
@@ -62,14 +74,14 @@ class CreateListItem extends React.PureComponent {
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle className="EditToDoListItem__title" id="alert-dialog-slide-title">Новый список</DialogTitle>
+                    <DialogTitle className="EditToDoListItem__title" id="alert-dialog-slide-title">Новая подзадача</DialogTitle>
                     <DialogContent>
                         <TextField
                             onChange={this.onLabelChange}
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Имя списка"
+                            label="Имя подзадачи"
                             color="primary"
                             type="text"
                             fullWidth
@@ -97,21 +109,22 @@ class CreateListItem extends React.PureComponent {
     }
 }
 
-const mapStateToProps = ({ user, lists }) => {
+const mapStateToProps = ({ user, lists, activeToDoListId }) => {
     return {
         user,
-        lists
+        lists,
+        activeToDoListId
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     const { todolistService } = ownProps;
     return {
-        addToDoList: (user, lists, label) => {
-            return addToDoList(todolistService, label, user, lists, dispatch)
+        addSubTask: (subtask, user, lists, activeToDoListId, taskId) => {
+            return addSubTask(todolistService, subtask, user, lists, activeToDoListId, taskId, dispatch)
         }
     }
 }
 
 
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(CreateListItem));
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(AddToDoListItemSubTaskItem));

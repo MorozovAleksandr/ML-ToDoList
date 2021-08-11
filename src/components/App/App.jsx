@@ -9,31 +9,25 @@ import SignIn from '../LogIn/SignIn/SignIn.jsx';
 import Registration from '../LogIn/Registration/Registration.jsx';
 import UpdatePassword from '../LogIn/UpdatePassword/UpdatePassword.jsx';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { connect } from 'react-redux';
 import firebase from 'firebase/app';
 import crypto from "crypto";
+import { authenticationUser, signInAccount, signOutAccount } from '../../redux/action/action.js';
+import withTodoListService from '../hoc/withTodoListService';
 import 'firebase/auth';
 import 'firebase/database';
 import "./App.css";
 
-class App extends React.PureComponent {
+class App extends React.Component {
     constructor(props) {
         super(props);
         this.idList = 1;
         this.state = {
-            activeToDoListId: null,
-            lists: /* dataJson.lists.map(item => this.createTodoList(...item)) */[],
             listsDefault: dataJson.lists.map(item => this.createTodoList(...item)),
-            user: false,
-            loadingData: true,
         }
     }
 
     componentDidMount() {
-        myEvents.addListener("EaddTodoList", this.addTodoList);
-        myEvents.addListener("EdeleteToDoList", this.deleteToDoList);
-        myEvents.addListener("EupdateToDoListLabel", this.updateToDoListLabel);
-        myEvents.addListener("EupdateActiveTodoListId", this.updateActiveTodoListId);
-        myEvents.addListener("EupdateToDoList", this.updateToDoList);
         myEvents.addListener("EcreateAccount", this.createAccount);
         myEvents.addListener("EsignInAccount", this.signInAccount);
         myEvents.addListener("EsignOut", this.signOut);
@@ -44,7 +38,7 @@ class App extends React.PureComponent {
                 listsRef.get().then((snapshot) => {
                     const data = snapshot.val();
                     let updateData = [];
-                    if (data.lists) {
+                    if (data && data.lists) {
                         updateData = data.lists.map(item => {
                             if (!('toDoList' in item)) {
                                 return { ...item, toDoList: [] };
@@ -52,32 +46,20 @@ class App extends React.PureComponent {
                                 return item;
                             }
                         })
+                        this.props.authenticationUser(uid, updateData, data.activetodolistid ? data.activetodolistid : null, false);
+                    } else {
+                        this.props.authenticationUser(uid, updateData, null, false);
                     }
-                    this.setState({
-                        lists: updateData,
-                        activeToDoListId: data.activetodolistid ? data.activetodolistid : null,
-                        user: uid,
-                        loadingData: false
-                    });
                 }).catch((error) => {
                     console.error(error);
                 });
             } else {
-                this.setState({
-                    user: false,
-                    lists: this.state.listsDefault,
-                    loadingData: false
-                })
+                this.props.authenticationUser(false, this.state.listsDefault, null, false);
             }
         });
     }
 
     componentWillUnmount() {
-        myEvents.removeListener("EaddTodoList", this.addTodoList);
-        myEvents.removeListener("EdeleteToDoList", this.deleteToDoList);
-        myEvents.removeListener("EupdateToDoListLabel", this.updateToDoListLabel);
-        myEvents.removeListener("EupdateActiveTodoListId", this.updateActiveTodoListId);
-        myEvents.removeListener("EupdateToDoList", this.updateToDoList);
         myEvents.removeListener("EcreateAccount", this.createAccount);
         myEvents.removeListener("EsignInAccount", this.signInAccount);
         myEvents.removeListener("EsignOut", this.signOut);
@@ -91,75 +73,10 @@ class App extends React.PureComponent {
         }
     }
 
-    addTodoList = (label) => {
-        const newList = this.createTodoList(label, []);
-        this.setState({
-            lists: [...this.state.lists, newList]
-        }, () => {
-            this.sendListToDB(this.state.user, this.state.lists);
-        })
-    }
-
-    deleteToDoList = (id) => {
-        this.setState(({ lists }) => {
-            const idx = lists.findIndex(item => item.id === id);
-            const before = lists.slice(0, idx);
-            const after = lists.slice(idx + 1);
-            if (id === this.state.activeToDoListId) {
-                this.sendActiveToDoListIdToDB(this.state.user, null);
-                return {
-                    lists: [...before, ...after],
-                    activeToDoListId: null
-                }
-            } else {
-                return {
-                    lists: [...before, ...after]
-                }
-            }
-        }, () => {
-            this.sendListToDB(this.state.user, this.state.lists);
-        })
-    }
-
-    updateToDoListLabel = (id, label) => {
-        this.setState(({ lists }) => {
-            const idx = lists.findIndex(item => item.id === id);
-            const before = lists.slice(0, idx);
-            const after = lists.slice(idx + 1);
-            const updateToDoList = { ...lists[idx], label: label };
-            return {
-                lists: [...before, updateToDoList, ...after]
-            }
-        }, () => {
-            this.sendListToDB(this.state.user, this.state.lists);
-        })
-    }
-
-    updateActiveTodoListId = (id) => {
-        this.setState({
-            activeToDoListId: id
-        })
-        this.sendActiveToDoListIdToDB(this.state.user, id);
-    }
-
-    updateToDoList = (toDoList) => {
-        this.setState(({ lists }) => {
-            const idx = lists.findIndex(item => item.id === this.state.activeToDoListId);
-            const before = lists.slice(0, idx);
-            const after = lists.slice(idx + 1);
-            const updateToDoList = { ...lists[idx], toDoList };
-            return {
-                lists: [...before, updateToDoList, ...after]
-            }
-        }, () => {
-            this.sendListToDB(this.state.user, this.state.lists);
-        })
-    }
-
     createAccount = (email, password, resolve, reject) => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(response => {
-                this.sendListToDB(response.user.uid, this.state.listsDefault, true);
+                this.props.todolistService.sendListToDB(response.user.uid, this.state.listsDefault, true);
                 resolve(response);
             })
             .catch(error => reject(error));
@@ -182,11 +99,7 @@ class App extends React.PureComponent {
                             }
                         })
                     }
-                    this.setState({
-                        lists: updateData,
-                        user: response.user.uid,
-                        activeToDoListId: null,
-                    });
+                    this.props.signInAccount(response.user.uid, updateData);
                 }).catch((error) => {
                     console.error(error);
                 });
@@ -196,37 +109,17 @@ class App extends React.PureComponent {
 
     signOut = () => {
         firebase.auth().signOut().then(() => {
-            this.setState({
-                lists: this.state.listsDefault,
-                activeToDoListId: null,
-                user: false
-            })
+            this.props.signOutAccount(this.state.listsDefault);
         }).catch((error) => {
             console.log(error);
         });
-    }
-
-    sendListToDB = (uid, newLists, newUser) => {
-        if (this.state.user || newUser) {
-            firebase.database().ref(`users/${uid}`).update({
-                lists: newLists
-            });
-        }
-    }
-
-    sendActiveToDoListIdToDB = (uid, id) => {
-        if (this.state.user) {
-            firebase.database().ref(`users/${uid}`).update({
-                activetodolistid: id
-            })
-        }
     }
 
     render() {
         return (
             <div className='wrapper'>
                 {
-                    this.state.loadingData &&
+                    this.props.loading &&
                     <div className="wrapper__circularProgress">
                         <CircularProgress className="circularProgress" />
                     </div>
@@ -237,13 +130,13 @@ class App extends React.PureComponent {
                 <Route path="/updatepassword" component={UpdatePassword} />
                 <Route path="/" exact render={() =>
                     <div>
-                        <LogIn user={this.state.user} />
+                        <LogIn user={this.props.user} />
 
                         <div className="content">
-                            <Lists lists={this.state.lists} />
+                            <Lists lists={this.props.lists} />
                             {
-                                this.state.activeToDoListId &&
-                                <ToDoList activeToDoList={this.state.lists.find(item => item.id === this.state.activeToDoListId)} />
+                                this.props.activeToDoListId &&
+                                <ToDoList activeToDoList={this.props.lists.find(item => item.id === this.props.activeToDoListId)} />
                             }
                         </div>
                     </div>
@@ -253,4 +146,19 @@ class App extends React.PureComponent {
     }
 }
 
-export default App;
+const mapStateToProps = ({ user, loading, activeToDoListId, lists }) => {
+    return {
+        user,
+        loading,
+        activeToDoListId,
+        lists
+    }
+}
+
+const mapDispatchToProps = {
+    authenticationUser,
+    signInAccount,
+    signOutAccount
+}
+
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(App));
