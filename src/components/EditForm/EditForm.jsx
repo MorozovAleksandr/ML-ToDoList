@@ -14,7 +14,7 @@ const Transition = React.forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EditForm = ({ initialLabel, title, text, eventSave, eventClose }) => {
+const EditForm = ({ initialLabel, title, text, eventSave, eventClose, maxLength = "40" }) => {
 
     const [label, setLabel] = useState(initialLabel);
     const [open, setOpen] = useState(true);
@@ -64,6 +64,7 @@ const EditForm = ({ initialLabel, title, text, eventSave, eventClose }) => {
                     value={label}
                     onKeyPress={onKeyPressHandler}
                     autoComplete="off"
+                    inputProps={{ maxLength }}
                 />
             </DialogContent>
             <DialogActions>

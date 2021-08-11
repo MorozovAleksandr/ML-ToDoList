@@ -65,7 +65,7 @@ const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, u
             </div>
             {
                 showFormEdit &&
-                <EditForm initialLabel={label} title="Редактирование подзадачи" text="Подзадача" eventSave={onSaveEdit} eventClose={onCloseEdit} />
+                <EditForm initialLabel={label} title="Редактирование подзадачи" text="Подзадача" eventSave={onSaveEdit} eventClose={onCloseEdit} maxLength="40" />
             }
         </div>
     );
