@@ -35,7 +35,7 @@ const EditForm = ({ initialLabel, title, text, eventSave, eventClose, maxLength 
     }
 
     const onKeyPressHandler = (e) => {
-        if (e.charCode === 13) {
+        if (e.charCode === 13 && label) {
             onSave();
         }
     }
