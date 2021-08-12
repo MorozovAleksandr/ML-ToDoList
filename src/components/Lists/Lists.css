@@ -6,11 +6,13 @@
 .lists__title {
     margin: 0;
     margin-bottom: 8px;
+    font-size: 26px;
 }
 
 .lists__addListButton {
     border-top: 1px solid rgba(200, 200, 200, 0.5);
     cursor: pointer;
+    font-size: 15px;
 }
 
 .lists__addListButton:hover {

@@ -7,7 +7,7 @@
     border-radius: 3px;
     cursor: pointer;
     padding: 10px 0 10px 15px;
-    font-size: 17px;
+    font-size: 15px;
     order: 1;
     width: 100%;
 
@@ -76,10 +76,13 @@
     box-sizing: border-box;
     padding: 4px;
     border-radius: 4px;
+    width: 30px;
+    height: 30px;
 }
 
 .ToDoListItem__button {
     border-radius: 5px !important;
+    padding: 10px !important;
 }
 
 .ToDoListItem .ToDoListItem__buttonDone .MuiSvgIcon-root {
@@ -92,7 +95,7 @@
 
 .done .ToDoListItem__buttonDone {
     background-color: #3CE6B0;
-    border: 2px solid #3CE6B0;
+    border: 1px solid #3CE6B0;
 }
 
 .ToDoListItem:hover {

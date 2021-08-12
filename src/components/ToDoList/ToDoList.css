@@ -5,6 +5,7 @@
 .todolist__name {
     padding: 30px;
     margin: 0;
+    font-size: 24px;
 }
 
 .todolist__list {
@@ -16,7 +17,7 @@
 
 .todolist__counts {
     padding: 0 35px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .todolist__counts__item {
@@ -26,4 +27,9 @@
 .todolist__counts__item_count {
     font-weight: 500;
     color: #3CE6B0;
+}
+
+.ToDoListItem__buttonDone .MuiSvgIcon-root {
+    width: 15px;
+    height: 15px;
 }
