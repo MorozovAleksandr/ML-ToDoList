@@ -55,6 +55,9 @@ class ToDoList extends React.PureComponent {
     };
 
     addItem = (item) => {
+        if (this.state.toDoList.length >= 40) {
+            return null;
+        }
         const newtoDoList = [...this.state.toDoList, this.createTodoItem(item)];
         this.props.updateToDoList(this.props.activeToDoListId, this.props.user, this.props.lists, newtoDoList);
     }

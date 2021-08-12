@@ -36,6 +36,9 @@ const createTodoList = (label, list) => {
     }
 }
 const addToDoList = (todoListService, label, user, lists, dispatch) => {
+    if (lists.length >= 19) {
+        return null;
+    }
     const newList = createTodoList(label, []);
     const newLists = [...lists, newList];
     todoListService.sendListToDB(user, newLists);
