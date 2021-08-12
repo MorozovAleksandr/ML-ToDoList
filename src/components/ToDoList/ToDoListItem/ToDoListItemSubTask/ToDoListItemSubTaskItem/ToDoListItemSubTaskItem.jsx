@@ -3,14 +3,15 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import StarIcon from '@material-ui/icons/Star';
-import { workWithSubTask } from '../../../../../redux/action/action';
+import { workWithSubTask, updateSubTaskTimeOrDate } from '../../../../../redux/action/action';
 
 import './ToDoListItemSubTaskItem.css';
 import { connect } from 'react-redux';
 import withTodoListService from '../../../../hoc/withTodoListService';
 import EditForm from '../../../../EditForm/EditForm';
+import DatePicker from '../../../../DatePicker/DatePicker';
 
-const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, user, lists, workWithSubTask }) => {
+const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskId, listId, user, lists, workWithSubTask, updateSubTaskTimeOrDate }) => {
 
     const [showFormEdit, setShowFormEdit] = useState(false);
 
@@ -44,6 +45,10 @@ const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, u
         onCloseEdit();
     }
 
+    const onSaveDateOrTime = (date, time) => {
+        updateSubTaskTimeOrDate(id, taskId, listId, user, lists, date, time);
+    }
+
     return (
         <div className={`ToDoListItem ToDoListItemSubTask ${done ? `done` : null} ${important ? `important_wrapper` : null}`} >
             <div className="ToDoListItem__leftBlock">
@@ -53,6 +58,7 @@ const ToDoListItemSubTaskItem = ({ done, important, label, id, taskId, listId, u
                 {label}
             </div>
             <div className="ToDoListItem__buttons">
+                <DatePicker eventSaveDateOrTime={onSaveDateOrTime} date={date ? date : null} time={time ? time : null} />
                 <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${important ? `important` : ``}`} onClick={onClickImportant} color="inherit" aria-label="edit">
                     <StarIcon fontSize="medium" />
                 </IconButton>
@@ -82,7 +88,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const { todolistService } = ownProps;
     return {
         workWithSubTask: (id, taskId, listId, user, lists, property, label) => {
-            return workWithSubTask(todolistService, id, taskId, listId, user, lists, dispatch, property, label)
+            return workWithSubTask(todolistService, id, taskId, listId, user, lists, dispatch, property, label);
+        },
+        updateSubTaskTimeOrDate: (id, taskId, listId, user, lists, date, time) => {
+            return updateSubTaskTimeOrDate(todolistService, id, taskId, listId, user, lists, dispatch, date, time);
         }
     }
 }

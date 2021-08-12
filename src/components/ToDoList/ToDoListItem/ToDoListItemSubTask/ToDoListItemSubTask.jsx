@@ -23,6 +23,8 @@ const ToDoListItemSubTask = ({ toDoListItem, lists, activeToDoListId, addSubTask
             done: false,
             taskId: taskId,
             listId: activeToDoListId,
+            date: null,
+            time: null,
             id: crypto.randomBytes(3).toString("hex")
         }
     };
@@ -34,10 +36,12 @@ const ToDoListItemSubTask = ({ toDoListItem, lists, activeToDoListId, addSubTask
     }
 
 
+
+
     let renderSubTask;
     if (toDoListItem.subtask) {
         renderSubTask = toDoListItem.subtask.map(item => {
-            return <ToDoListItemSubTaskItem key={item.id} taskId={toDoListItem.id} done={item.done} important={item.important} label={item.label} id={item.id} listId={activeToDoListId} />
+            return <ToDoListItemSubTaskItem key={item.id} date={item.date} time={item.time} taskId={toDoListItem.id} done={item.done} important={item.important} label={item.label} id={item.id} listId={activeToDoListId} />
         });
     } else {
         renderSubTask = null;

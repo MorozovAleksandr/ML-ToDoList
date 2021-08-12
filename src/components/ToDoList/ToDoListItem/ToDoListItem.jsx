@@ -11,6 +11,10 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { myEvents } from '../../../events';
 import ToDoListItemSubTask from "./ToDoListItemSubTask/ToDoListItemSubTask";
+import { updateToDoListItemTimeOrDate } from '../../../redux/action/action';
+import DatePicker from "../../DatePicker/DatePicker";
+import { connect } from "react-redux";
+import withTodoListService from "../../hoc/withTodoListService";
 
 class ToDoListItem extends React.PureComponent {
 
@@ -34,6 +38,11 @@ class ToDoListItem extends React.PureComponent {
         myEvents.emit('EdeleteItem', this.props.item.id);
     }
 
+    onSaveDateOrTime = (date, time) => {
+        const { activeToDoListId, user, lists, updateToDoListItemTimeOrDate } = this.props;
+        updateToDoListItemTimeOrDate(activeToDoListId, this.props.item.id, user, lists, date, time);
+    }
+
     render() {
         return (
             <Accordion className={`ToDoListItem__Accordion ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`}>
@@ -51,6 +60,7 @@ class ToDoListItem extends React.PureComponent {
                             {this.props.item.label}
                         </div>
                         <div className="ToDoListItem__buttons">
+                            <DatePicker eventSaveDateOrTime={this.onSaveDateOrTime} date={this.props.item.date ? this.props.item.date : null} time={this.props.item.time ? this.props.item.time : null} />
                             <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${this.props.item.important ? `important` : ``}`} onClick={this.onClickImportant} color="inherit" aria-label="edit">
                                 <StarIcon fontSize="medium" />
                             </IconButton>
@@ -72,4 +82,23 @@ class ToDoListItem extends React.PureComponent {
     }
 }
 
-export default ToDoListItem;
+const mapStateToProps = ({ user, lists, activeToDoListId }) => {
+    return {
+        user,
+        lists,
+        activeToDoListId
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const { todolistService } = ownProps;
+    return {
+        updateToDoListItemTimeOrDate: (activeToDoListId, taskId, user, lists, date, time) => {
+            return updateToDoListItemTimeOrDate(todolistService, activeToDoListId, taskId, user, lists, dispatch, date, time);
+        }
+
+    }
+}
+
+
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(ToDoListItem));

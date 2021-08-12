@@ -6,7 +6,7 @@
     align-items: center;
     border-radius: 3px;
     cursor: pointer;
-    padding: 5px 0 5px 15px;
+    padding: 10px 0 10px 15px;
     font-size: 17px;
     order: 1;
     width: 100%;
@@ -127,4 +127,9 @@
 .ToDoListItem__leftBlock {
     display: flex;
     align-items: center;
+}
+
+.ToDoListItem__buttons {
+    display: flex;
+    flex-direction: row;
 }

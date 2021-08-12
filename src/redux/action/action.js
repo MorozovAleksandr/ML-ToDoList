@@ -64,6 +64,26 @@ const updateToDoListLabelAC = (newLists) => {
     }
 }
 
+const updateToDoListItemTimeOrDate = (todoListService, activeToDoListId, taskId, user, lists, dispatch, date = null, time = null) => {
+    const idx = lists.findIndex(item => item.id === activeToDoListId); // Индекс списка
+    const before = lists.slice(0, idx); // До индекса
+    const after = lists.slice(idx + 1); // После индекса
+
+    const idxTask = lists[idx].toDoList.findIndex(item => item.id === taskId); // Индекс таски
+    const beforeTask = lists[idx].toDoList.slice(0, idxTask); // До таски
+    const afterTask = lists[idx].toDoList.slice(idxTask + 1); // После таски
+
+    let updateTask = { ...lists[idx].toDoList[idxTask], date: date, time: time };
+
+    const updateToDoListItem = [...beforeTask, updateTask, ...afterTask];
+    const updateToDoList = { ...lists[idx], toDoList: updateToDoListItem };
+    const newLists = [...before, updateToDoList, ...after];
+    dispatch(updateLists(newLists));
+    todoListService.sendListToDB(user, newLists);
+}
+
+
+
 const addSubTask = (todoListService, subtask, user, lists, activeToDoListId, taskId, dispatch) => {
     const idx = lists.findIndex(item => item.id === activeToDoListId);
     const before = lists.slice(0, idx);
@@ -98,6 +118,39 @@ const addSubTask = (todoListService, subtask, user, lists, activeToDoListId, tas
         }
     }
     const updateToDoListItem = [...beforeTask, task, ...afterTask];
+    const updateToDoList = { ...lists[idx], toDoList: updateToDoListItem };
+    const newLists = [...before, updateToDoList, ...after];
+    dispatch(updateLists(newLists));
+    todoListService.sendListToDB(user, newLists);
+}
+
+const updateSubTaskTimeOrDate = (todoListService, id, taskId, listId, user, lists, dispatch, date = null, time = null) => {
+    const idx = lists.findIndex(item => item.id === listId); // индекс списка
+    const before = lists.slice(0, idx); // до списка
+    const after = lists.slice(idx + 1); // после списка
+
+    const idxTask = lists[idx].toDoList.findIndex(item => item.id === taskId); // Индекс таски
+    const beforeTask = lists[idx].toDoList.slice(0, idxTask); // До таски
+    const afterTask = lists[idx].toDoList.slice(idxTask + 1); // После таски
+
+    const idxSubTask = lists[idx].toDoList[idxTask].subtask.findIndex(item => item.id === id); // индекс подзадачи
+    const beforeSubTask = lists[idx].toDoList[idxTask].subtask.slice(0, idxSubTask); // до подзадачи
+    const afterSubTask = lists[idx].toDoList[idxTask].subtask.slice(idxSubTask + 1); // после подзадачи
+    const oldSubTask = lists[idx].toDoList[idxTask].subtask[idxSubTask]; // старая подзадача
+
+    let newSubTask = { ...oldSubTask, date: date, time: time };
+    const updateTask = {
+        ...lists[idx].toDoList[idxTask],
+        subtask: [
+            ...beforeSubTask,
+            {
+                ...newSubTask
+            },
+            ...afterSubTask
+        ]
+    };
+
+    const updateToDoListItem = [...beforeTask, updateTask, ...afterTask];
     const updateToDoList = { ...lists[idx], toDoList: updateToDoListItem };
     const newLists = [...before, updateToDoList, ...after];
     dispatch(updateLists(newLists));
@@ -243,5 +296,7 @@ export {
     updateToDoListLabel,
     updateToDoList,
     addSubTask,
-    workWithSubTask
+    workWithSubTask,
+    updateToDoListItemTimeOrDate,
+    updateSubTaskTimeOrDate
 }

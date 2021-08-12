@@ -48,6 +48,8 @@ class ToDoList extends React.PureComponent {
             important: false,
             done: false,
             subtask: null,
+            date: null,
+            time: null,
             id: crypto.randomBytes(3).toString("hex")
         }
     };

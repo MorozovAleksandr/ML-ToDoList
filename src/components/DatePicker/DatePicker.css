@@ -1,0 +1,81 @@
+.DatePicker .MuiFormControl-marginNormal {
+    margin: 0 5px !important;
+    margin-top: -7px !important;
+}
+
+.DatePicker .MuiInput-underline:before {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: "" !important;
+    position: absolute;
+    /* transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; */
+    border-bottom: 0;
+    pointer-events: none;
+}
+
+.DatePicker .MuiInputBase-input {
+    width: 95px;
+    text-align: right;
+}
+
+.DatePicker__item_time .MuiInputBase-input {
+    width: 50px;
+}
+
+.DatePicker .MuiFormLabel-filled {
+    color: rgba(0, 0, 0, 0) !important;
+}
+
+.DatePicker__item {}
+
+.DatePicker .MuiDialog-paperWidthSm {
+    width: auto !important;
+}
+
+.DatePicker__pickers .MuiDialog-paperWidthSm {
+    width: auto;
+}
+
+.DatePicker__pickers .MuiPickersToolbar-toolbar,
+.DatePicker__pickers .MuiPickersClock-pin,
+.DatePicker__pickers .MuiPickersClockPointer-pointer,
+.DatePicker__pickers .MuiPickersClockPointer-thumb,
+.DatePicker__pickers .MuiPickersDay-daySelected {
+    background-color: #3CE6B0;
+}
+
+.DatePicker__pickers .MuiPickersClockPointer-thumb {
+    border-color: #3CE6B0;
+}
+
+.DatePicker__pickers .MuiPickersClockNumber-clockNumberSelected,
+.DatePicker__pickers .MuiPickersToolbarText-toolbarTxt,
+.DatePicker__pickers .MuiPickersDay-daySelected {
+    color: black !important;
+}
+
+.DatePicker__pickers .MuiButton-textPrimary,
+.DatePicker__pickers .MuiPickersDay-current {
+    color: #3CE6B0;
+}
+
+.DatePicker__pickers .MuiPickersCalendarHeader-iconButton {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.DatePicker__pickers .MuiPickersBasePicker-pickerView,
+.DatePicker__pickers .MuiPickersCalendarHeader-dayLabel,
+.DatePicker__pickers .MuiPickersDay-day,
+.DatePicker__pickers .MuiPickersClockNumber-clockNumber {
+    color: white;
+}
+
+.DatePicker .MuiInputLabel-formControl {
+    left: auto;
+    right: 50px;
+}
+
+.DatePicker .MuiSvgIcon-root {
+    fill: white !important;
+}
