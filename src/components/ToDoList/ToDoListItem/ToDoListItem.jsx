@@ -47,7 +47,7 @@ class ToDoListItem extends React.PureComponent {
         return (
             <Accordion className={`ToDoListItem__Accordion ${this.props.item.done ? `done` : null} ${this.props.item.important ? `important_wrapper` : null}`}>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon className="ToDoListItem__Accordion_expandIcon" />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     className="ToDoListItem__Accordion_grid"

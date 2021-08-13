@@ -35,3 +35,44 @@ body {
     background-color: #212121;
     z-index: 11;
 }
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+    .todolist {
+        margin-top: 75px;
+        border-top: 1px solid grey;
+    }
+
+    .todolist__name {
+        padding-top: 15px
+    }
+
+    .signInWrapper {
+        right: 18px;
+        top: 7px;
+    }
+
+    .lists {
+        height: 100%;
+    }
+
+    .lists__wrapper .MuiDrawer-paper {
+        width: 280px;
+        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        color: white
+    }
+
+    .addToDoItem {
+        width: 100%;
+        grid-template-columns: auto;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 10px;
+    }
+
+    .todolist__list {
+        margin-bottom: 100px;
+    }
+}

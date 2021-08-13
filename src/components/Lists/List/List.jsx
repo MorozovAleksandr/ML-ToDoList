@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import { updateActiveTodoListId, deleteToDoList, updateToDoListLabel } from '../../../redux/action/action'
 import EditForm from "../../EditForm/EditForm";
 
-const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoListLabel, deleteToDoList, updateActiveTodoListId }) => {
+const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoListLabel, deleteToDoList, updateActiveTodoListId, toggleDrawer }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [showFormEditListItem, setShowFormEditListItem] = useState(false);
@@ -48,9 +48,14 @@ const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoL
         setShowFormEditListItem(false);
     }
 
+    const updateActiveList = (e) => {
+        toggleDrawer(false)(e);
+        updateActiveTodoListId(id, user);
+    }
+
     return (
         <div>
-            <ListItem className="list__item" onClick={() => { updateActiveTodoListId(id, user) }} button>
+            <ListItem className="list__item" onClick={updateActiveList} button>
                 <div>
                     {label}
                     {

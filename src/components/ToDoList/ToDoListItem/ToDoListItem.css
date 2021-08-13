@@ -37,12 +37,14 @@
 
 .ToDoListItem__Accordion_grid {
     display: grid !important;
-    grid-template-columns: 1fr 48px;
+    grid-template-columns: 1fr 40px;
     min-height: auto !important;
 }
 
 .ToDoListItem__Accordion_grid .MuiIconButton-edgeEnd {
     margin-right: 0 !important;
+    border-radius: 5px !important;
+    padding: 10px;
 }
 
 

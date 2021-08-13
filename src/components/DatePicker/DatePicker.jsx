@@ -31,7 +31,7 @@ const localeUtilsMap = {
 };
 
 const localeFormatMap = {
-    ru: "d MMM yyyy",
+    ru: "MM/dd/yyyy",
 };
 
 const localeCancelLabelMap = {
@@ -81,7 +81,6 @@ export default function DatePicker({ date, time, eventSaveTime, eventSaveDate, e
                     <KeyboardTimePicker className="DatePicker__item DatePicker__item_time"
                         margin="normal"
                         id="time-picker"
-                        clearable
                         ampm={false}
                         label="Время"
                         cancelLabel={localeCancelLabelMap.ru}
