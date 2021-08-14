@@ -39,7 +39,7 @@ const localeCancelLabelMap = {
 };
 
 export default function DatePicker({ date, time, eventSaveTime, eventSaveDate, eventSaveDateOrTime }) {
-    // The first commit of Material-UI
+
     const [selectedDate, setSelectedDate] = React.useState(date);
     const [selectedTime, setSelectedTime] = React.useState(time);
 
