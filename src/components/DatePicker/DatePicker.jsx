@@ -63,7 +63,6 @@ export default function DatePicker({ date, time, eventSaveTime, eventSaveDate, e
                 <Grid container onClick={stopPropagation} justifyContent="space-around">
                     <KeyboardDatePicker className="DatePicker__item"
                         margin="normal"
-                        id="date-picker-dialog"
                         label="Дата"
                         format={localeFormatMap.ru}
                         cancelLabel={localeCancelLabelMap.ru}
@@ -80,7 +79,6 @@ export default function DatePicker({ date, time, eventSaveTime, eventSaveDate, e
                     />
                     <KeyboardTimePicker className="DatePicker__item DatePicker__item_time"
                         margin="normal"
-                        id="time-picker"
                         ampm={false}
                         label="Время"
                         cancelLabel={localeCancelLabelMap.ru}

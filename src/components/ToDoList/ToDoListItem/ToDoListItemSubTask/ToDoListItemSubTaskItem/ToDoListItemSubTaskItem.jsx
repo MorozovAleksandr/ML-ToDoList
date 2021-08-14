@@ -3,8 +3,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import StarIcon from '@material-ui/icons/Star';
-import { workWithSubTask, updateSubTaskTimeOrDate } from '../../../../../redux/action/action';
-
+import { updateSubTaskTimeOrDate, workWithSubTask } from '../../../../../redux/action/action-functions';
 import './ToDoListItemSubTaskItem.css';
 import { connect } from 'react-redux';
 import withTodoListService from '../../../../hoc/withTodoListService';

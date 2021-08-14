@@ -8,7 +8,7 @@ import Fade from '@material-ui/core/Fade';
 import './List.css';
 import withTodoListService from '../../hoc/withTodoListService';
 import { connect } from "react-redux";
-import { updateActiveTodoListId, deleteToDoList, updateToDoListLabel } from '../../../redux/action/action'
+import { updateActiveTodoListId, updateToDoListLabel, deleteToDoList } from '../../../redux/action/action-functions'
 import EditForm from "../../EditForm/EditForm";
 
 const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoListLabel, deleteToDoList, updateActiveTodoListId, toggleDrawer }) => {

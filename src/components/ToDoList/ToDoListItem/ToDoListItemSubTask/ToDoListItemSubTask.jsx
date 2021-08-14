@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import ToDoListItemSubTaskItem from './ToDoListItemSubTaskItem/ToDoListItemSubTaskItem';
 import crypto from "crypto";
 import { connect } from 'react-redux';
-import { addSubTask } from '../../../../redux/action/action';
+import { addSubTask } from '../../../../redux/action/action-functions';
 import withTodoListService from '../../../hoc/withTodoListService';
 import EditForm from '../../../EditForm/EditForm';
 

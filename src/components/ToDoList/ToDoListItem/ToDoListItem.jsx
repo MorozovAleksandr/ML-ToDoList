@@ -11,7 +11,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { myEvents } from '../../../events';
 import ToDoListItemSubTask from "./ToDoListItemSubTask/ToDoListItemSubTask";
-import { updateToDoListItemTimeOrDate } from '../../../redux/action/action';
+import { updateToDoListItemTimeOrDate } from '../../../redux/action/action-functions';
 import DatePicker from "../../DatePicker/DatePicker";
 import { connect } from "react-redux";
 import withTodoListService from "../../hoc/withTodoListService";

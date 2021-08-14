@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import IconButton from '@material-ui/core/IconButton';
-import { addToDoList } from '../../redux/action/action';
+import { addToDoList } from '../../redux/action/action-functions';
 import MenuIcon from '@material-ui/icons/Menu';
-import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import { connect } from "react-redux";
 import withTodoListService from "../hoc/withTodoListService";
 import EditForm from "../EditForm/EditForm";
 import List from './List/List';
-
-import Button from '@material-ui/core/Button';
 import './Lists.css'
 import { Fragment } from "react";
 
@@ -23,8 +20,6 @@ const Lists = ({ lists, addToDoList, user }) => {
     const [mobileButton, setMobileButton] = React.useState(false);
 
     const toggleDrawer = (open) => (event) => {
-
-        console.log(open);
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }

@@ -3,7 +3,7 @@ import './ToDoList.css'
 import ToDoListItem from "./ToDoListItem/ToDoListItem.jsx";
 import AddToDoItem from "./AddToDoItem/AddToDoItem.jsx";
 import crypto from "crypto";
-import { updateToDoList } from "./../../redux/action/action";
+import { updateToDoList } from "./../../redux/action/action-functions";
 import { myEvents } from '../../events';
 import { connect } from "react-redux";
 import withTodoListService from "../hoc/withTodoListService";

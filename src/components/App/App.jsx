@@ -12,7 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux';
 import firebase from 'firebase/app';
 import crypto from "crypto";
-import { authenticationUser, signInAccount, signOutAccount } from '../../redux/action/action.js';
+import { authenticationUserAC, signInAccountAC, signOutAccountAC } from '../../redux/action/action.js';
 import withTodoListService from '../hoc/withTodoListService';
 import 'firebase/auth';
 import 'firebase/database';
@@ -46,15 +46,15 @@ class App extends React.Component {
                                 return item;
                             }
                         })
-                        this.props.authenticationUser(uid, updateData, data.activetodolistid ? data.activetodolistid : null, false);
+                        this.props.authenticationUserAC(uid, updateData, data.activetodolistid ? data.activetodolistid : null, false);
                     } else {
-                        this.props.authenticationUser(uid, updateData, null, false);
+                        this.props.authenticationUserAC(uid, updateData, null, false);
                     }
                 }).catch((error) => {
                     console.error(error);
                 });
             } else {
-                this.props.authenticationUser(false, this.state.listsDefault, null, false);
+                this.props.authenticationUserAC(false, this.state.listsDefault, null, false);
             }
         });
     }
@@ -99,7 +99,7 @@ class App extends React.Component {
                             }
                         })
                     }
-                    this.props.signInAccount(response.user.uid, updateData);
+                    this.props.signInAccountAC(response.user.uid, updateData);
                 }).catch((error) => {
                     console.error(error);
                 });
@@ -109,7 +109,7 @@ class App extends React.Component {
 
     signOut = () => {
         firebase.auth().signOut().then(() => {
-            this.props.signOutAccount(this.state.listsDefault);
+            this.props.signOutAccountAC(this.state.listsDefault);
         }).catch((error) => {
             console.log(error);
         });
@@ -155,9 +155,9 @@ const mapStateToProps = ({ user, loading, activeToDoListId, lists }) => {
 }
 
 const mapDispatchToProps = {
-    authenticationUser,
-    signInAccount,
-    signOutAccount
+    authenticationUserAC,
+    signInAccountAC,
+    signOutAccountAC
 }
 
 export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(App));
