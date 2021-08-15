@@ -85,4 +85,4 @@ const EditForm = ({ initialLabel, title, text, eventSave, eventClose, maxLength 
     )
 }
 
-export default EditForm;
+export default React.memo(EditForm);

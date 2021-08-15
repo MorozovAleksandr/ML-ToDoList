@@ -12,7 +12,6 @@ import './Lists.css'
 import { Fragment } from "react";
 
 const Lists = ({ lists, addToDoList, user }) => {
-
     let width = window.innerWidth;
 
     const [showFormAddList, setShowFormAddList] = useState(false);
@@ -112,4 +111,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(Lists));
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(React.memo(Lists)));

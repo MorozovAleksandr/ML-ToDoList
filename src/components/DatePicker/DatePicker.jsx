@@ -38,7 +38,7 @@ const localeCancelLabelMap = {
     ru: "отмена",
 };
 
-export default function DatePicker({ date, time, eventSaveTime, eventSaveDate, eventSaveDateOrTime }) {
+const DatePicker = ({ date, time, eventSaveDateOrTime }) => {
 
     const [selectedDate, setSelectedDate] = React.useState(date);
     const [selectedTime, setSelectedTime] = React.useState(time);
@@ -99,3 +99,5 @@ export default function DatePicker({ date, time, eventSaveTime, eventSaveDate, e
         </div>
     );
 }
+
+export default React.memo(DatePicker);

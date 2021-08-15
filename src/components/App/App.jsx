@@ -18,7 +18,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import "./App.css";
 
-class App extends React.Component {
+class App extends React.PureComponent {
     constructor(props) {
         super(props);
         this.idList = 1;

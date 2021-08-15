@@ -12,7 +12,6 @@ import { updateActiveTodoListId, updateToDoListLabel, deleteToDoList } from '../
 import EditForm from "../../EditForm/EditForm";
 
 const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoListLabel, deleteToDoList, updateActiveTodoListId, toggleDrawer }) => {
-
     const [anchorEl, setAnchorEl] = useState(null);
     const [showFormEditListItem, setShowFormEditListItem] = useState(false);
 
@@ -112,4 +111,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(List));
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(React.memo(List)));

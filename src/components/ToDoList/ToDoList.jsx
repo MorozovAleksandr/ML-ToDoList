@@ -157,4 +157,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 
 
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(ToDoList));
+export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(React.memo(ToDoList)));
