@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import IconButton from '@material-ui/core/IconButton';
-import { addToDoList } from '../../redux/action/action-functions';
+import { addToDoListAC } from '../../redux/action/action';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import { connect } from "react-redux";
-import withTodoListService from "../hoc/withTodoListService";
 import EditForm from "../EditForm/EditForm";
 import List from './List/List';
 import './Lists.css'
+import crypto from "crypto";
 import { Fragment } from "react";
 
-const Lists = ({ lists, addToDoList, user }) => {
+const Lists = ({ lists, addToDoListAC }) => {
     let width = window.innerWidth;
 
     const [showFormAddList, setShowFormAddList] = useState(false);
@@ -25,6 +25,14 @@ const Lists = ({ lists, addToDoList, user }) => {
         setMobileButton(open);
     };
 
+    const createTodoList = (label, list) => {
+        return {
+            id: crypto.randomBytes(3).toString("hex"),
+            label: label,
+            toDoList: list
+        }
+    }
+
     const onClickAddList = () => {
         setShowFormAddList(true);
     }
@@ -34,8 +42,8 @@ const Lists = ({ lists, addToDoList, user }) => {
     }
 
     const onSaveAddList = (label) => {
-        addToDoList(user, lists, label);
-        onCloseAddListForm()
+        addToDoListAC(createTodoList(label, []));
+        onCloseAddListForm();
     }
 
     const myLists = lists.map(item => {
@@ -94,21 +102,14 @@ const Lists = ({ lists, addToDoList, user }) => {
     }
 }
 
-const mapStateToProps = ({ user, lists }) => {
+const mapStateToProps = ({ lists }) => {
     return {
-        user,
         lists
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const { todolistService } = ownProps;
-    return {
-        addToDoList: (user, lists, label) => {
-            return addToDoList(todolistService, label, user, lists, dispatch)
-        }
-    }
+const mapDispatchToProps = {
+    addToDoListAC
 }
 
-
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(React.memo(Lists)));
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Lists));

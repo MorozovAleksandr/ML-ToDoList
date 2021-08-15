@@ -27,6 +27,18 @@ class App extends React.PureComponent {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        const { user, todolistService, activeToDoListId, lists } = this.props;
+        if (user) {
+            if (activeToDoListId !== prevProps.activeToDoListId) {
+                todolistService.sendActiveToDoListIdToDB(user, activeToDoListId);
+            }
+            if (lists !== prevProps.lists) {
+                todolistService.sendListToDB(user, lists);
+            }
+        }
+    }
+
     componentDidMount() {
         myEvents.addListener("EcreateAccount", this.createAccount);
         myEvents.addListener("EsignInAccount", this.signInAccount);

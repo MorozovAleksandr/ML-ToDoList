@@ -6,12 +6,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Fade from '@material-ui/core/Fade';
 import './List.css';
-import withTodoListService from '../../hoc/withTodoListService';
 import { connect } from "react-redux";
-import { updateActiveTodoListId, updateToDoListLabel, deleteToDoList } from '../../../redux/action/action-functions'
+import { updateActiveTodoListIdAC, deleteToDoListAC, updateToDoListLabelAC } from '../../../redux/action/action';
 import EditForm from "../../EditForm/EditForm";
 
-const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoListLabel, deleteToDoList, updateActiveTodoListId, toggleDrawer }) => {
+const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, updateToDoListLabelAC, deleteToDoListAC }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [showFormEditListItem, setShowFormEditListItem] = useState(false);
 
@@ -28,7 +27,7 @@ const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoL
 
     const onClickDeleteItem = (e) => {
         e.stopPropagation();
-        deleteToDoList(id, lists, user, activeToDoListId)
+        deleteToDoListAC(id);
         handleClose();
     }
 
@@ -39,8 +38,8 @@ const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoL
     }
 
     const onSaveEdit = (label) => {
-        updateToDoListLabel(id, label, user, lists)
-        closeFormEditListItem()
+        updateToDoListLabelAC(id, label);
+        closeFormEditListItem();
     }
 
     const closeFormEditListItem = () => {
@@ -49,7 +48,7 @@ const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoL
 
     const updateActiveList = (e) => {
         toggleDrawer(false)(e);
-        updateActiveTodoListId(id, user);
+        updateActiveTodoListIdAC(id);
     }
 
     return (
@@ -88,27 +87,10 @@ const List = ({ needsDone, label, id, lists, user, activeToDoListId, updateToDoL
     )
 }
 
-const mapStateToProps = ({ user, activeToDoListId, lists }) => {
-    return {
-        user,
-        activeToDoListId,
-        lists
-    }
+const mapDispatchToProps = {
+    updateToDoListLabelAC,
+    updateActiveTodoListIdAC,
+    deleteToDoListAC
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const { todolistService } = ownProps;
-    return {
-        updateActiveTodoListId: (id, user) => {
-            return updateActiveTodoListId(todolistService, dispatch, user, id)
-        },
-        deleteToDoList: (id, lists, user, activeToDoListId) => {
-            return deleteToDoList(todolistService, id, lists, user, activeToDoListId, dispatch)
-        },
-        updateToDoListLabel: (id, label, user, lists) => {
-            return updateToDoListLabel(todolistService, id, label, user, lists, dispatch)
-        }
-    }
-}
-
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(React.memo(List)));
+export default connect(null, mapDispatchToProps)(React.memo(List));

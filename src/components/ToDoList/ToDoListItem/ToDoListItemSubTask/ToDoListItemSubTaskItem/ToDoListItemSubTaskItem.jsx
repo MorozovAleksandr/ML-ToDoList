@@ -3,31 +3,29 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import StarIcon from '@material-ui/icons/Star';
-import { updateSubTaskTimeOrDate, workWithSubTask } from '../../../../../redux/action/action-functions';
+import { updateDateOrTimeSubTaskAC, workWithSubTaskAC } from '../../../../../redux/action/action';
 import './ToDoListItemSubTaskItem.css';
 import { connect } from 'react-redux';
-import withTodoListService from '../../../../hoc/withTodoListService';
 import EditForm from '../../../../EditForm/EditForm';
 import DatePicker from '../../../../DatePicker/DatePicker';
 
-const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskId, listId, user, lists, workWithSubTask, updateSubTaskTimeOrDate }) => {
+const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskId, workWithSubTaskAC, updateDateOrTimeSubTaskAC }) => {
 
     const [showFormEdit, setShowFormEdit] = useState(false);
 
     const onClickDone = (e) => {
         e.stopPropagation();
-        workWithSubTask(id, taskId, listId, user, lists, 'done');
+        workWithSubTaskAC(id, taskId, 'done');
     }
 
     const onClickImportant = (e) => {
         e.stopPropagation();
-        workWithSubTask(id, taskId, listId, user, lists, 'important');
+        workWithSubTaskAC(id, taskId, 'important');
     }
 
     const onClickDelete = (e) => {
         e.stopPropagation();
-        workWithSubTask(id, taskId, listId, user, lists);
-
+        workWithSubTaskAC(id, taskId);
     }
 
     const onClickEdit = (e) => {
@@ -40,12 +38,12 @@ const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskI
     }
 
     const onSaveEdit = (label) => {
-        workWithSubTask(id, taskId, listId, user, lists, null, label);
+        workWithSubTaskAC(id, taskId, null, label);
         onCloseEdit();
     }
 
     const onSaveDateOrTime = (date, time) => {
-        updateSubTaskTimeOrDate(id, taskId, listId, user, lists, date, time);
+        updateDateOrTimeSubTaskAC(id, taskId, date, time);
     }
 
     return (
@@ -76,24 +74,10 @@ const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskI
     );
 };
 
-const mapStateToProps = ({ user, lists }) => {
-    return {
-        user,
-        lists
-    }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const { todolistService } = ownProps;
-    return {
-        workWithSubTask: (id, taskId, listId, user, lists, property, label) => {
-            return workWithSubTask(todolistService, id, taskId, listId, user, lists, dispatch, property, label);
-        },
-        updateSubTaskTimeOrDate: (id, taskId, listId, user, lists, date, time) => {
-            return updateSubTaskTimeOrDate(todolistService, id, taskId, listId, user, lists, dispatch, date, time);
-        }
-    }
+const mapDispatchToProps = {
+    workWithSubTaskAC,
+    updateDateOrTimeSubTaskAC
 }
 
 
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(ToDoListItemSubTaskItem));
+export default connect(null, mapDispatchToProps)(React.memo(ToDoListItemSubTaskItem));

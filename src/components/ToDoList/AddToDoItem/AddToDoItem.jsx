@@ -2,7 +2,8 @@ import React from "react";
 import TextField from '@material-ui/core/TextField';
 import './AddToDoItem.css'
 import Button from '@material-ui/core/Button';
-import { myEvents } from '../../../events';
+import { addTaskAC } from '../../../redux/action/action';
+import { connect } from "react-redux";
 
 
 class AddToDoItem extends React.PureComponent {
@@ -20,7 +21,7 @@ class AddToDoItem extends React.PureComponent {
     onSubmit = (e) => {
         e.preventDefault();
         if (this.state.label) {
-            myEvents.emit('EaddItem', this.state.label);
+            this.props.addTaskAC(this.state.label);
             this.setState({ label: '' });
         }
     }
@@ -37,4 +38,8 @@ class AddToDoItem extends React.PureComponent {
     }
 }
 
-export default AddToDoItem;
+const mapDispatchToProps = {
+    addTaskAC
+}
+
+export default connect(null, mapDispatchToProps)(AddToDoItem);

@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from "redux";
 import reducer from "./reducers/reducer";
 
 const logMiddleware = ({ getState }) => (next) => (action) => {
-    console.log(action.type, getState());
+    /* console.log(action.type, getState()); */
     return next(action);
 }
 

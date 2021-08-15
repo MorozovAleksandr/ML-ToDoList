@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import './ToDoListItemSubTask.css';
 import Button from '@material-ui/core/Button';
 import ToDoListItemSubTaskItem from './ToDoListItemSubTaskItem/ToDoListItemSubTaskItem';
-import crypto from "crypto";
 import { connect } from 'react-redux';
-import { addSubTask } from '../../../../redux/action/action-functions';
-import withTodoListService from '../../../hoc/withTodoListService';
+import { addSubTaskAC } from '../../../../redux/action/action';
 import EditForm from '../../../EditForm/EditForm';
 
-const ToDoListItemSubTask = ({ toDoListItem, lists, activeToDoListId, addSubTask, user }) => {
+const ToDoListItemSubTask = ({ toDoListItem, addSubTaskAC }) => {
 
     const [showFormAddSubTask, setshowFormAddSubTask] = useState(false);
     const [taskId] = useState(toDoListItem.id);
@@ -16,32 +14,15 @@ const ToDoListItemSubTask = ({ toDoListItem, lists, activeToDoListId, addSubTask
         setshowFormAddSubTask(false);
     }
 
-    const createSubTask = (label) => {
-        return {
-            label: label,
-            important: false,
-            done: false,
-            taskId: taskId,
-            listId: activeToDoListId,
-            date: null,
-            time: null,
-            id: crypto.randomBytes(3).toString("hex")
-        }
-    };
-
     const onSaveAddSubTaskForm = (label) => {
-        const subTask = createSubTask(label)
-        addSubTask(subTask, user, lists, activeToDoListId, taskId);
+        addSubTaskAC(taskId, label);
         onCloseAddSubTaskForm();
     }
-
-
-
 
     let renderSubTask;
     if (toDoListItem.subtask) {
         renderSubTask = toDoListItem.subtask.map(item => {
-            return <ToDoListItemSubTaskItem key={item.id} date={item.date} time={item.time} taskId={toDoListItem.id} done={item.done} important={item.important} label={item.label} id={item.id} listId={activeToDoListId} />
+            return <ToDoListItemSubTaskItem key={item.id} date={item.date} time={item.time} taskId={toDoListItem.id} done={item.done} important={item.important} label={item.label} id={item.id} />
         });
     } else {
         renderSubTask = null;
@@ -64,22 +45,9 @@ const ToDoListItemSubTask = ({ toDoListItem, lists, activeToDoListId, addSubTask
     );
 };
 
-const mapStateToProps = ({ lists, user, activeToDoListId }) => {
-    return {
-        lists,
-        user,
-        activeToDoListId
-    }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const { todolistService } = ownProps;
-    return {
-        addSubTask: (subtask, user, lists, activeToDoListId, taskId) => {
-            return addSubTask(todolistService, subtask, user, lists, activeToDoListId, taskId, dispatch)
-        }
-    }
+const mapDispatchToProps = {
+    addSubTaskAC
 }
 
 
-export default withTodoListService()(connect(mapStateToProps, mapDispatchToProps)(ToDoListItemSubTask));
+export default connect(null, mapDispatchToProps)(React.memo(ToDoListItemSubTask));
