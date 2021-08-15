@@ -40,9 +40,9 @@ const ToDoListItem = ({ item, togglePropertyTaskAC, deleteTaskAC, updateDateOrTi
     const onSaveDateOrTime = (date, time) => {
         updateDateOrTimeTaskAC(item.id, date, time);
     }
-
     return (
-        <Accordion className={`ToDoListItem__Accordion ${item.done ? `done` : null} ${item.important ? `important_wrapper` : null}`}>
+        <Accordion TransitionProps={{ unmountOnExit: true }}
+            className={`ToDoListItem__Accordion ${item.done ? `done` : null} ${item.important ? `important_wrapper` : null}`}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon className="ToDoListItem__Accordion_expandIcon" />}
                 aria-controls="panel1a-content"

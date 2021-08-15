@@ -28,7 +28,6 @@ const ToDoListItemSubTask = ({ toDoListItem, addSubTaskAC }) => {
         renderSubTask = null;
     }
 
-
     return (
         <div>
             <div className="ToDoListItemSubTask__renderSubTask">
