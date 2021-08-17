@@ -21,8 +21,10 @@ class AddToDoItem extends React.PureComponent {
     onSubmit = (e) => {
         e.preventDefault();
         if (this.state.label) {
-            this.props.addTaskAC(this.state.label);
-            this.setState({ label: '' });
+            if ((this.state.label.split(' ').length - 1) !== this.state.label.length) {
+                this.props.addTaskAC(this.state.label);
+                this.setState({ label: '' });
+            }
         }
     }
 

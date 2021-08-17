@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,6 +18,11 @@ const EditForm = ({ initialLabel, title, text, eventSave, eventClose, maxLength 
 
     const [label, setLabel] = useState(initialLabel);
     const [open, setOpen] = useState(true);
+    const [disable, setDisabled] = useState(true);
+
+    useEffect(() => {
+        changeDisable(initialLabel);
+    }, [initialLabel]);
 
     const onClose = () => {
         setLabel('');
@@ -30,8 +35,20 @@ const EditForm = ({ initialLabel, title, text, eventSave, eventClose, maxLength 
         eventSave(label);
     }
 
+    const changeDisable = (item) => {
+        if (!item.length || (item.match(/\s/g) && (item.match(/\s/g).length === item.length))) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
+
+
+
     const onLabelChange = (e) => {
         setLabel(e.target.value);
+        changeDisable(e.target.value);
     }
 
     const onKeyPressHandler = (e) => {
@@ -76,7 +93,7 @@ const EditForm = ({ initialLabel, title, text, eventSave, eventClose, maxLength 
                     size="medium"
                     startIcon={<SaveIcon />}
                     onClick={onSave}
-                    disabled={!label}
+                    disabled={disable}
                 >
                     Сохранить
                 </Button>
