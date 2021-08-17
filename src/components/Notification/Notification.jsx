@@ -34,7 +34,7 @@ const Notification = ({ notifacation, clearNotificationAC }) => {
             return;
         }
 
-        clearNotificationAC();
+        /* clearNotificationAC(); */ // переывзывает нотификацию
         setOpen(false);
     };
 
