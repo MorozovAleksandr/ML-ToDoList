@@ -1,0 +1,9 @@
+.RecycleBinGroupItem {
+    background-color: rgba(75, 75, 75, 0.5);
+    border-radius: 3px;
+    color: white;
+    margin-bottom: 10px;
+    display: grid;
+    padding: 10px 15px;
+    grid-template-columns: 1fr 1fr 1fr;
+}

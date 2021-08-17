@@ -1,0 +1,19 @@
+.RecycleBin {
+    padding: 30px;
+    padding-top: 70px;
+}
+
+.RecycleBin_back {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.RecycleBin_back:hover {
+    background: rgba(0, 0, 0, 0.2);
+}

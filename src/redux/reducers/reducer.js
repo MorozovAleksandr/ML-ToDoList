@@ -5,7 +5,17 @@ const initialState = {
     user: false,
     loading: true,
     activeToDoListId: null,
-    lists: []
+    lists: [],
+    recycleBin: {
+        lists: [],
+        tasks: [],
+        subtasks: []
+    },
+    notifacation: {
+        status: false,
+        text: '',
+        color: ''
+    }
 }
 
 const getBeforeAfterIdx = (items, id) => {
@@ -62,7 +72,12 @@ const updateToDoListLabel = (lists, id, label) => {
     return updateLists;
 }
 
-const deleteToDoList = (lists, id) => {
+const deleteToDoList = (lists, id, recycleBin) => {
+
+    if (recycleBin.lists.length + recycleBin.tasks.length + recycleBin.subtasks.length >= 30) {
+        return lists;
+    }
+
     const [beforeList, afterList] = getBeforeAfter(lists, id);
     const updateLists = [...beforeList, ...afterList];
     return updateLists;
@@ -86,6 +101,10 @@ const addTask = (state, label) => {
 }
 
 const deleteTask = (state, id) => {
+    if (state.recycleBin.lists.length + state.recycleBin.tasks.length + state.recycleBin.subtasks.length >= 30) {
+        return state.lists;
+    }
+
     const [idxList, beforeList, afterList] = getBeforeAfterIdx(state.lists, state.activeToDoListId);
     const [beforeTask, afterTask] = getBeforeAfter(state.lists[idxList].toDoList, id);
     const updateToDoList = [...beforeTask, ...afterTask];
@@ -188,7 +207,7 @@ const updateDateOrTimeSubTask = (state, id, taskId, date, time) => {
     return updateLists;
 }
 
-const workWithSubTask = ({ lists, activeToDoListId }, id, taskId, property, label) => {
+const workWithSubTask = ({ lists, activeToDoListId, recycleBin }, id, taskId, property, label) => {
     const [idxList, beforeList, afterList] = getBeforeAfterIdx(lists, activeToDoListId);
     const [idxTask, beforeTask, afterTask] = getBeforeAfterIdx(lists[idxList].toDoList, taskId);
     const [idxSubTask, beforeSubTask, afterSubTask] = getBeforeAfterIdx(lists[idxList].toDoList[idxTask].subtask, id);
@@ -226,6 +245,9 @@ const workWithSubTask = ({ lists, activeToDoListId }, id, taskId, property, labe
     }
 
     if (!label && !property) { // если нужно удалить подзадачу
+        if (recycleBin.lists.length + recycleBin.tasks.length + recycleBin.subtasks.length >= 30) {
+            return lists;
+        }
         updateTask = {
             ...lists[idxList].toDoList[idxTask],
             subtask: [
@@ -239,6 +261,208 @@ const workWithSubTask = ({ lists, activeToDoListId }, id, taskId, property, labe
     const updateToDoList = { ...lists[idxList], toDoList: updateToDoListItem };
     const updateLists = [...beforeList, updateToDoList, ...afterList];
     return updateLists;
+}
+
+const addItemToRecycleBin = (state, id, type, taskId = null, property, label) => {
+
+    if (state.recycleBin.lists.length + state.recycleBin.tasks.length + state.recycleBin.subtasks.length >= 30) {
+        return state.recycleBin;
+    }
+
+    if (type === "list") {
+        const [idxList] = getBeforeAfterIdx(state.lists, id);
+        const item = { ...state.lists[idxList] };
+        const tasks = [...state.recycleBin.tasks];
+        let subtasks = [...state.recycleBin.subtasks];
+        let updateTasks = [];
+        let updateTasksForList = [];
+
+        // Проверяем задачи из корзины, для переноса в лист
+        if (tasks.length) {
+            tasks.forEach((task) => {
+                if (task.listId === id) {
+                    updateTasksForList = [...updateTasksForList, task];
+                }
+                else {
+                    updateTasks = [...updateTasks, task];
+                }
+            })
+        }
+
+        let updateItem = { ...item, toDoList: [...item.toDoList, ...updateTasksForList] };
+
+        // Проверяем подзадачи из корзины, для переноса в лист
+        if (subtasks.length) {
+            const searchSubtasks = subtasks.filter(subtask => subtask.listId === id);
+            updateItem.toDoList.forEach(task => {
+                searchSubtasks.forEach(subtask => {
+                    if (task.id === subtask.taskId) {
+                        //После нахождения нужной таски, добавляем в неё удалённые подзадачи
+                        const [idxTask, beforeTask, afterTask] = getBeforeAfterIdx(updateItem.toDoList, task.id);
+                        const updateTask = { ...updateItem.toDoList[idxTask], subtask: [...updateItem.toDoList[idxTask].subtask, subtask] };
+                        updateItem = { ...updateItem, toDoList: [...beforeTask, updateTask, ...afterTask] };
+
+                        //Обновляем список подзадач в корзине
+                        const idxSubtask = subtasks.findIndex(item => item.taskId === task.id);
+                        const beforeSubtask = subtasks.slice(0, idxSubtask);
+                        const afterSubtask = subtasks.slice(idxSubtask + 1);
+                        subtasks = [...beforeSubtask, ...afterSubtask];
+                    }
+                })
+            })
+        }
+
+        return { ...state.recycleBin, lists: [...state.recycleBin.lists, updateItem], tasks: updateTasks, subtasks: subtasks };
+    }
+
+    if (type === "task") {
+        const [idxList] = getBeforeAfterIdx(state.lists, state.activeToDoListId);
+        const [idxTask] = getBeforeAfterIdx(state.lists[idxList].toDoList, id);
+
+        const subtasks = [...state.recycleBin.subtasks];
+        let updateSubtasks = [];
+        let updateSubtasksForTask = [];
+
+        if (subtasks) {
+            subtasks.forEach((subtask) => {
+                if (subtask.taskId === id) {
+                    updateSubtasksForTask = [...updateSubtasksForTask, subtask]
+                } else {
+                    updateSubtasks = [...updateSubtasks, subtask];
+                }
+            })
+        }
+        const item = { ...state.lists[idxList].toDoList[idxTask], listId: state.lists[idxList].id };
+        const updateSub = item.subtask ? item.subtask : [];
+        return { ...state.recycleBin, tasks: [...state.recycleBin.tasks, { ...item, subtask: [...updateSub, ...updateSubtasksForTask] }], subtasks: updateSubtasks };
+    }
+
+    if (type === "subtask" && (!label && !property)) {
+        const [idxList] = getBeforeAfterIdx(state.lists, state.activeToDoListId);
+        const [idxTask] = getBeforeAfterIdx(state.lists[idxList].toDoList, taskId);
+        const [idxSubTask] = getBeforeAfterIdx(state.lists[idxList].toDoList[idxTask].subtask, id);
+        const item = { ...state.lists[idxList].toDoList[idxTask].subtask[idxSubTask] };
+
+        return { ...state.recycleBin, subtasks: [...state.recycleBin.subtasks, item] };
+    }
+    return state.recycleBin;
+}
+
+const restoreItem = (lists, item, type) => {
+    if (type === "lists") {
+        return [...lists, item];
+    }
+
+    if (type === "tasks") {
+        const [idxList, beforeList, afterList] = getBeforeAfterIdx(lists, item.listId);
+        const updateToDoList = [...lists[idxList].toDoList, item];
+        const updateList = { ...lists[idxList], toDoList: updateToDoList };
+        const updateLists = [...beforeList, updateList, ...afterList];
+        return updateLists;
+    }
+
+    if (type === "subtasks") {
+        const [idxList, beforeList, afterList] = getBeforeAfterIdx(lists, item.listId);
+        const [idxTask, beforeTask, afterTask] = getBeforeAfterIdx(lists[idxList].toDoList, item.taskId);
+
+        let task;
+        if (lists[idxList].toDoList[idxTask].subtask) {
+            task = {
+                ...lists[idxList].toDoList[idxTask],
+                subtask: [
+                    ...lists[idxList].toDoList[idxTask].subtask,
+                    {
+                        ...item
+                    }
+                ]
+            }
+        } else {
+            task = {
+                ...lists[idxList].toDoList[idxTask],
+                subtask: [
+                    {
+                        ...item
+                    }
+                ]
+            }
+        }
+        const updateToDoListItem = [...beforeTask, task, ...afterTask];
+        const updateToDoList = { ...lists[idxList], toDoList: updateToDoListItem };
+        const updateLists = [...beforeList, updateToDoList, ...afterList];
+        return updateLists;
+    }
+}
+
+const removeItemRecycleBin = (recycleBin, item, type) => {
+    const [beforeList, afterList] = getBeforeAfter(recycleBin[type], item.id);
+    const updateLists = [...beforeList, ...afterList];
+    return {
+        ...recycleBin,
+        [type]: updateLists
+    };
+}
+
+const authenticationUserUpdateLists = (lists) => {
+    let updateLists = [];
+    if (lists) {
+        updateLists = lists.map(item => {
+            if (!('toDoList' in item)) {
+                return { ...item, toDoList: [] };
+            } else {
+                return item;
+            }
+        })
+    }
+    return updateLists;
+}
+
+const updateItemInRecycleBin = (recycleBin, item, type) => {
+    if (type === "tasks") {
+        const [idxList, beforeList, afterList] = getBeforeAfterIdx(recycleBin.lists, item.listId);
+        const updateToDoList = [...recycleBin.lists[idxList].toDoList, item];
+        const updateList = { ...recycleBin.lists[idxList], toDoList: updateToDoList };
+        const updateLists = [...beforeList, updateList, ...afterList];
+        return updateLists;
+    }
+}
+
+const updateRecycleBinFromDB = (recycleBin) => {
+
+    if (recycleBin.lists) {
+        const updateLists = recycleBin.lists.map(item => {
+            if (!('toDoList' in item)) {
+                return { ...item, toDoList: [] };
+            } else {
+                return item;
+            }
+        })
+        recycleBin.lists = [...updateLists];
+    } else {
+        recycleBin = { ...recycleBin, lists: [] };
+    }
+
+    if (!recycleBin.subtasks) {
+        recycleBin = { ...recycleBin, subtasks: [] };
+    }
+
+    if (!recycleBin.tasks) {
+        recycleBin = { ...recycleBin, tasks: [] };
+    }
+
+    return recycleBin;
+}
+
+const updateNotification = (recycleBin, notification) => {
+
+    if (recycleBin.tasks.length + recycleBin.lists.length + recycleBin.subtasks.length >= 30) {
+        return {
+            status: true,
+            text: 'Корзина переполнена',
+            color: 'warning'
+        }
+    }
+
+    return notification;
 }
 
 const reducer = (state = initialState, action) => {
@@ -274,8 +498,10 @@ const reducer = (state = initialState, action) => {
         case "DELETE_TODO_LIST": {
             return {
                 ...state,
-                lists: deleteToDoList(state.lists, action.id),
-                activeToDoListId: updateActiveListBeforeDelete(state.activeToDoListId, action.id)
+                lists: deleteToDoList(state.lists, action.id, state.recycleBin),
+                activeToDoListId: updateActiveListBeforeDelete(state.activeToDoListId, action.id),
+                recycleBin: addItemToRecycleBin(state, action.id, "list"),
+                notifacation: updateNotification(state.recycleBin, state.notifacation)
             }
         }
 
@@ -297,9 +523,10 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 user: action.userId,
-                lists: action.lists,
+                lists: authenticationUserUpdateLists(action.lists),
                 activeToDoListId: action.activeToDoListId,
-                loading: action.loading
+                loading: action.loading,
+                recycleBin: updateRecycleBinFromDB(action.recycleBin)
             }
         }
 
@@ -318,6 +545,11 @@ const reducer = (state = initialState, action) => {
                 user: false,
                 lists: action.lists,
                 activeToDoListId: null,
+                recycleBin: {
+                    lists: [],
+                    tasks: [],
+                    subtasks: []
+                }
             }
         }
 
@@ -331,7 +563,9 @@ const reducer = (state = initialState, action) => {
         case "DELETE_TASK": {
             return {
                 ...state,
-                lists: deleteTask(state, action.id)
+                lists: deleteTask(state, action.id),
+                recycleBin: addItemToRecycleBin(state, action.id, "task"),
+                notifacation: updateNotification(state.recycleBin, state.notifacation)
             }
         }
 
@@ -373,7 +607,42 @@ const reducer = (state = initialState, action) => {
         case "WORK_WITH_SUB_TASK": {
             return {
                 ...state,
-                lists: workWithSubTask(state, action.id, action.taskId, action.property, action.label)
+                lists: workWithSubTask(state, action.id, action.taskId, action.property, action.label),
+                recycleBin: addItemToRecycleBin(state, action.id, "subtask", action.taskId, action.property, action.label),
+                notifacation: updateNotification(state.recycleBin, state.notifacation)
+            }
+        }
+
+        case "RESTORE_ITEM": {
+            return {
+                ...state,
+                lists: restoreItem(state.lists, action.item, action.itemType),
+                recycleBin: removeItemRecycleBin(state.recycleBin, action.item, action.itemType)
+            }
+        }
+
+        case "DESTROY_ITEM": {
+            return {
+                ...state,
+                recycleBin: removeItemRecycleBin(state.recycleBin, action.item, action.itemType)
+            }
+        }
+
+        case "UPDATE_ITEM_IN_RECYCLE_BIN": {
+            return {
+                ...state,
+                recycleBin: updateItemInRecycleBin(state.recycleBin, action.item, action.itemType)
+            }
+        }
+
+        case "CLEAR_NOTIFICATION": {
+            return {
+                ...state,
+                notifacation: {
+                    status: false,
+                    text: '',
+                    color: 'success'
+                }
             }
         }
 

@@ -27,13 +27,14 @@ const updateListsAC = (lists) => {
     }
 }
 
-const authenticationUserAC = (userId, lists, activeToDoListId, loading) => {
+const authenticationUserAC = (userId, lists, activeToDoListId, loading, recycleBin) => {
     return {
         type: "AUTHENTICATION_USER",
         userId,
         lists,
         activeToDoListId,
-        loading
+        loading,
+        recycleBin
     }
 }
 
@@ -126,6 +127,36 @@ const workWithSubTaskAC = (id, taskId, property = null, label = null) => {
     }
 }
 
+const restoreItemAC = (item, itemType) => {
+    return {
+        type: "RESTORE_ITEM",
+        item,
+        itemType
+    }
+}
+
+const destroyItemAC = (item, itemType) => {
+    return {
+        type: "DESTROY_ITEM",
+        item,
+        itemType
+    }
+}
+
+const updateItemInRecycleBinAC = (item, itemType) => {
+    return {
+        type: "UPDATE_ITEM_IN_RECYCLE_BIN",
+        item,
+        itemType
+    }
+}
+
+const clearNotificationAC = () => {
+    return {
+        type: "CLEAR_NOTIFICATION"
+    }
+}
+
 export {
     addToDoListAC,
     updateToDoListLabelAC,
@@ -142,5 +173,9 @@ export {
     updateDateOrTimeTaskAC,
     addSubTaskAC,
     updateDateOrTimeSubTaskAC,
-    workWithSubTaskAC
+    workWithSubTaskAC,
+    restoreItemAC,
+    updateItemInRecycleBinAC,
+    destroyItemAC,
+    clearNotificationAC
 }

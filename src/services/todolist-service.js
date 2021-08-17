@@ -9,6 +9,13 @@ export default class TodoListService {
         }
     }
 
+    sendRecycleBinToDB = (uid, newRecycleBin, newUser) => {
+        if (uid || newUser) {
+            firebase.database().ref(`users/${uid}`).update({
+                recyclebin: newRecycleBin
+            });
+        }
+    }
     sendActiveToDoListIdToDB = (uid, id) => {
         if (uid) {
             firebase.database().ref(`users/${uid}`).update({

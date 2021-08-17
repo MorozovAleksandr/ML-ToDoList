@@ -12,11 +12,20 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux';
 import firebase from 'firebase/app';
 import crypto from "crypto";
+import RecycleBin from './../RecycleBin/RecycleBin';
 import { authenticationUserAC, signInAccountAC, signOutAccountAC } from '../../redux/action/action.js';
 import withTodoListService from '../hoc/withTodoListService';
 import 'firebase/auth';
 import 'firebase/database';
 import "./App.css";
+import RecycleBinButton from "../RecycleBinButton/RecycleBinButton.jsx";
+import Notification from "../Notification/Notification.jsx";
+
+const initialRecycleBin = {
+    lists: [],
+    tasks: [],
+    subtasks: []
+}
 
 class App extends React.PureComponent {
     constructor(props) {
@@ -28,13 +37,16 @@ class App extends React.PureComponent {
     }
 
     componentDidUpdate(prevProps) {
-        const { user, todolistService, activeToDoListId, lists } = this.props;
+        const { user, todolistService, activeToDoListId, lists, recycleBin } = this.props;
         if (user) {
             if (activeToDoListId !== prevProps.activeToDoListId) {
                 todolistService.sendActiveToDoListIdToDB(user, activeToDoListId);
             }
             if (lists !== prevProps.lists) {
                 todolistService.sendListToDB(user, lists);
+            }
+            if (recycleBin !== prevProps.recycleBin) {
+                todolistService.sendRecycleBinToDB(user, recycleBin);
             }
         }
     }
@@ -49,24 +61,16 @@ class App extends React.PureComponent {
                 let listsRef = firebase.database().ref(`users/${uid}`);
                 listsRef.get().then((snapshot) => {
                     const data = snapshot.val();
-                    let updateData = [];
-                    if (data && data.lists) {
-                        updateData = data.lists.map(item => {
-                            if (!('toDoList' in item)) {
-                                return { ...item, toDoList: [] };
-                            } else {
-                                return item;
-                            }
-                        })
-                        this.props.authenticationUserAC(uid, updateData, data.activetodolistid ? data.activetodolistid : null, false);
+                    if (data) {
+                        this.props.authenticationUserAC(uid, data.lists, data.activetodolistid ? data.activetodolistid : null, false, data.recyclebin ? data.recyclebin : initialRecycleBin);
                     } else {
-                        this.props.authenticationUserAC(uid, updateData, null, false);
+                        this.props.authenticationUserAC(uid, null, null, false, initialRecycleBin);
                     }
                 }).catch((error) => {
                     console.error(error);
                 });
             } else {
-                this.props.authenticationUserAC(false, this.state.listsDefault, null, false);
+                this.props.authenticationUserAC(false, this.state.listsDefault, null, false, initialRecycleBin);
             }
         });
     }
@@ -98,20 +102,14 @@ class App extends React.PureComponent {
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(response => {
                 resolve(response);
-                let listsRef = firebase.database().ref(`users/${response.user.uid}/lists`);
+                let listsRef = firebase.database().ref(`users/${response.user.uid}`);
                 listsRef.get().then((snapshot) => {
                     const data = snapshot.val();
-                    let updateData = [];
                     if (data) {
-                        updateData = data.map(item => {
-                            if (!('toDoList' in item)) {
-                                return { ...item, toDoList: [] };
-                            } else {
-                                return item;
-                            }
-                        })
+                        this.props.authenticationUserAC(response.user.uid, data.lists, null, false, data.recyclebin ? data.recyclebin : initialRecycleBin);
+                    } else {
+                        this.props.authenticationUserAC(response.user.uid, null, null, false, initialRecycleBin);
                     }
-                    this.props.signInAccountAC(response.user.uid, updateData);
                 }).catch((error) => {
                     console.error(error);
                 });
@@ -130,6 +128,7 @@ class App extends React.PureComponent {
     render() {
         return (
             <div className='wrapper'>
+                <Notification />
                 {
                     this.props.loading &&
                     <div className="wrapper__circularProgress">
@@ -138,10 +137,14 @@ class App extends React.PureComponent {
                 }
                 <Route path="/signin" component={SignIn} />
                 <Route path="/signup" component={Registration} />
+                <Route path="/recyclebin" component={RecycleBin} />
                 <Route path="/updatepassword" component={UpdatePassword} />
                 <Route path="/" exact render={() =>
                     <div>
-                        <LogIn user={this.props.user} />
+                        <div className="sideMenu">
+                            <RecycleBinButton />
+                            <LogIn user={this.props.user} />
+                        </div>
 
                         <div className="content">
                             <Lists lists={this.props.lists} />
@@ -157,12 +160,13 @@ class App extends React.PureComponent {
     }
 }
 
-const mapStateToProps = ({ user, loading, activeToDoListId, lists }) => {
+const mapStateToProps = ({ user, loading, activeToDoListId, lists, recycleBin }) => {
     return {
         user,
         loading,
         activeToDoListId,
-        lists
+        lists,
+        recycleBin
     }
 }
 

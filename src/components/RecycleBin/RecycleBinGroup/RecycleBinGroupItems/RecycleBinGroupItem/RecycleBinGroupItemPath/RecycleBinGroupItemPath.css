@@ -1,0 +1,25 @@
+.RecycleBinGroupItemPath {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.RecycleBinGroupItemPath__path .MuiMenu-paper {
+    padding: 10px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.RecycleBinGroupItemPath__path_item {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.RecycleBinGroupItemPath__path_item .MuiSvgIcon-root {
+    margin: 5px 0;
+}
+
+.RecycleBinGroupItemPath .addToDoItem__button {
+    min-width: 125px;
+    padding: 6px 12px !important;
+}

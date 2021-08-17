@@ -3,6 +3,17 @@ body {
     margin: 0;
 }
 
+.sideMenu {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
 .wrapper {
     width: 100%;
     min-height: 100vh;
@@ -50,7 +61,7 @@ body {
         padding-top: 15px
     }
 
-    .signInWrapper {
+    .sideMenu {
         right: 18px;
         top: 7px;
     }
