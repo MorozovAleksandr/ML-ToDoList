@@ -87,3 +87,46 @@ body {
         margin-bottom: 100px;
     }
 }
+
+@media (max-width: 500px) {
+    .todolist__name {
+        padding: 15px;
+    }
+
+    .todolist__counts {
+        padding: 0 20px;
+    }
+
+    .todolist__list {
+        padding: 30px 15px;
+    }
+
+    .ToDoListItem__details {
+        padding: 10px 15px !important;
+    }
+
+    .toggleMenu {
+        left: 295px;
+    }
+
+    .toggleMenu__mobile {
+        left: 215px;
+    }
+
+    .addToDoItem {
+        padding: 30px 15px;
+    }
+
+    .sideMenu {
+        right: 3px;
+    }
+
+    .RecycleBin {
+        padding: 30px 15px;
+        padding-top: 70px;
+    }
+
+    .RecycleBin_back {
+        right: 15px;
+    }
+}
