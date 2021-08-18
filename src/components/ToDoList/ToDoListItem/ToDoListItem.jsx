@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './ToDoListItem.css';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
@@ -13,9 +13,13 @@ import { myEvents } from '../../../events';
 import ToDoListItemSubTask from "./ToDoListItemSubTask/ToDoListItemSubTask";
 import { deleteTaskAC, togglePropertyTaskAC, updateDateOrTimeTaskAC } from '../../../redux/action/action';
 import DatePicker from "../../DatePicker/DatePicker";
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { connect } from "react-redux";
+import { Fragment } from "react";
 
 const ToDoListItem = ({ item, togglePropertyTaskAC, deleteTaskAC, updateDateOrTimeTaskAC }) => {
+
+    const [showMenuButtons, setShowMenuButtons] = useState(false);
 
     const onClickDone = (e) => {
         e.stopPropagation();
@@ -40,41 +44,62 @@ const ToDoListItem = ({ item, togglePropertyTaskAC, deleteTaskAC, updateDateOrTi
     const onSaveDateOrTime = (date, time) => {
         updateDateOrTimeTaskAC(item.id, date, time);
     }
-    return (
-        <Accordion TransitionProps={{ unmountOnExit: true }}
-            className={`ToDoListItem__Accordion ${item.done ? `done` : null} ${item.important ? `important_wrapper` : null}`}>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon className="ToDoListItem__Accordion_expandIcon" />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                className="ToDoListItem__Accordion_grid"
-            >
-                <div className={`ToDoListItem ${item.done ? `done` : null} ${item.important ? `important_wrapper` : null}`} >
-                    <div className="ToDoListItem__leftBlock">
-                        <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={onClickDone} color="inherit" aria-label="delete">
-                            <CheckIcon fontSize="small" />
-                        </IconButton>
-                        {item.label}
-                    </div>
-                    <div className="ToDoListItem__buttons">
-                        <DatePicker eventSaveDateOrTime={onSaveDateOrTime} date={item.date ? item.date : null} time={item.time ? item.time : null} />
-                        <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${item.important ? `important` : ``}`} onClick={onClickImportant} color="inherit" aria-label="edit">
-                            <StarIcon fontSize="medium" />
-                        </IconButton>
-                        <IconButton className="ToDoListItem__button ToDoListItem__button_marginRight" onClick={onClickEdit} color="inherit" aria-label="edit">
-                            <EditIcon fontSize="medium" />
-                        </IconButton>
-                        <IconButton className="ToDoListItem__button" onClick={onClickDelete} color="inherit" aria-label="delete">
-                            <DeleteOutlinedIcon fontSize="medium" />
-                        </IconButton>
-                    </div>
-                </div>
-            </AccordionSummary>
-            <AccordionDetails className="ToDoListItem__details">
-                <ToDoListItemSubTask toDoListItem={item} />
-            </AccordionDetails>
-        </Accordion>
 
+    const toggleMenuButtons = (e) => {
+        e.stopPropagation();
+        setShowMenuButtons(!showMenuButtons);
+    }
+
+    const onClickWrapperMobileMenu = () => {
+        setShowMenuButtons(false);
+    }
+
+    return (
+        <Fragment>
+            <div onClick={onClickWrapperMobileMenu} className={`todolist__close-wrapper ${showMenuButtons ? `todolist__close-wrapper_mobile` : null}`}></div>
+            <Accordion TransitionProps={{ unmountOnExit: true }}
+                className={`ToDoListItem__Accordion ${item.done ? `done` : null} ${item.important ? `important_wrapper` : null}`}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon className="ToDoListItem__Accordion_expandIcon" />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    className="ToDoListItem__Accordion_grid"
+                >
+                    <div className={`ToDoListItem ${item.done ? `done` : null} ${item.important ? `important_wrapper` : null}`} >
+                        <div className="ToDoListItem__leftBlock">
+                            <IconButton className="ToDoListItem__button ToDoListItem__buttonDone" onClick={onClickDone} color="inherit" aria-label="delete">
+                                <CheckIcon fontSize="small" />
+                            </IconButton>
+                            {item.label}
+                        </div>
+
+
+                        <IconButton className="list__buttonMenu ToDoListItem__button_menu" aria-controls="simple-menu" aria-haspopup="true" onClick={toggleMenuButtons}>
+                            <MoreVertIcon />
+                        </IconButton>
+
+                        <div className={`ToDoListItem__buttons ${showMenuButtons ? `ToDoListItem__buttons_mobile` : null}`}>
+                            <DatePicker eventSaveDateOrTime={onSaveDateOrTime} date={item.date ? item.date : null} time={item.time ? item.time : null} />
+                            <IconButton className={`ToDoListItem__button ToDoListItem__button_important  ToDoListItem__button_marginRight ${item.important ? `important` : ``}`} onClick={onClickImportant} color="inherit" aria-label="edit">
+                                <StarIcon fontSize="medium" />
+                            </IconButton>
+                            <IconButton className="ToDoListItem__button ToDoListItem__button_edit ToDoListItem__button_marginRight" onClick={onClickEdit} color="inherit" aria-label="edit">
+                                <EditIcon fontSize="medium" />
+                            </IconButton>
+                            <IconButton className="ToDoListItem__button ToDoListItem__button_delete" onClick={onClickDelete} color="inherit" aria-label="delete">
+                                <DeleteOutlinedIcon fontSize="medium" />
+                            </IconButton>
+                        </div>
+
+
+                    </div>
+                </AccordionSummary>
+                <AccordionDetails className="ToDoListItem__details">
+                    <ToDoListItemSubTask toDoListItem={item} />
+                </AccordionDetails>
+            </Accordion>
+
+        </Fragment>
     )
 }
 

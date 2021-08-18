@@ -29,9 +29,10 @@ class AddToDoItem extends React.PureComponent {
     }
 
     render() {
+        const maxLength = "40";
         return (
             <form className="addToDoItem" onSubmit={this.onSubmit}>
-                <TextField className="addToDoItem__input" autoComplete="off" onChange={this.onLabelChange} id="standard-basic" value={this.state.label} label="Что должно быть сделано" />
+                <TextField inputProps={{ maxLength }} className="addToDoItem__input" autoComplete="off" onChange={this.onLabelChange} id="standard-basic" value={this.state.label} label="Что должно быть сделано" />
                 <Button className="addToDoItem__button" type='submit' variant="contained" color="primary">
                     Добавить
                 </Button>

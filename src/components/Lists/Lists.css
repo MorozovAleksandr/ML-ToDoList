@@ -1,6 +1,9 @@
 .lists {
     background-color: rgb(50, 50, 50);
     padding: 30px;
+    transition: all 0.2s ease-out;
+
+    z-index: 40;
 }
 
 .lists__title {
@@ -26,12 +29,99 @@
 
 .toggleMenu {
     position: absolute;
-    top: 7px;
+    top: 18px;
     left: 30px;
-    width: 40px !important;
-    height: 40px !important;
+    width: 30px !important;
     z-index: 10;
     padding: 12px 0;
     cursor: pointer;
-    fill: yellow;
+    fill: white;
+    transition: all 0.2s ease-out;
+}
+
+.toggleMenu {
+    display: none !important;
+}
+
+.lists__close-wrapper {
+    display: none;
+}
+
+
+
+
+.btn-menu span {
+    display: block;
+    position: relative;
+
+    height: 3px;
+    margin: 5px 0 0;
+    background-color: rgba(60, 230, 176, 0.9);
+    -webkit-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+
+.hidden-menu-ticker {
+    display: none;
+}
+
+.btn-menu span.first {
+    margin-top: 0;
+}
+
+.hidden-menu-ticker:checked~.hidden-menu {
+    top: 5px;
+}
+
+.hidden-menu-ticker:checked~.btn-menu span.first {
+    -webkit-transform: rotate(45deg);
+    top: 6px;
+}
+
+.hidden-menu-ticker:checked~.btn-menu span.second {
+    opacity: 0;
+}
+
+.hidden-menu-ticker:checked~.btn-menu span.third {
+    -webkit-transform: rotate(-45deg);
+    top: -10px;
+}
+
+
+@media (max-width: 768px) {
+    .lists {
+        position: absolute;
+        left: -280px;
+        box-sizing: border-box;
+    }
+
+    .toggleMenu {
+        display: block !important;
+        position: absolute;
+        left: 30px;
+        left: 310px;
+    }
+
+    .toggleMenu__mobile {
+        left: 215px;
+    }
+
+    .lists_mobile {
+        left: 0;
+        width: 280px;
+    }
+
+    .lists__close-wrapper_mobile {
+        position: absolute;
+        z-index: 10;
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+    }
+
 }

@@ -40,7 +40,7 @@ const RecycleBinGroupItemPath = ({ path }) => {
     return (
         <div className="RecycleBinGroupItemPath">
 
-            <Button className="addToDoItem__button" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+            <Button className="RecycleBinGroupItemPath__button" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
                 Увидеть путь
             </Button>
             <StyledMenu

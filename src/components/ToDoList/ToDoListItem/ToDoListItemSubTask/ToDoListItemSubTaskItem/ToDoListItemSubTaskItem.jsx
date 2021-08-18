@@ -8,10 +8,12 @@ import './ToDoListItemSubTaskItem.css';
 import { connect } from 'react-redux';
 import EditForm from '../../../../EditForm/EditForm';
 import DatePicker from '../../../../DatePicker/DatePicker';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskId, workWithSubTaskAC, updateDateOrTimeSubTaskAC }) => {
 
     const [showFormEdit, setShowFormEdit] = useState(false);
+    const [showMenuButtons, setShowMenuButtons] = useState(false);
 
     const onClickDone = (e) => {
         e.stopPropagation();
@@ -46,7 +48,10 @@ const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskI
         updateDateOrTimeSubTaskAC(id, taskId, date, time);
     }
 
-
+    const toggleMenuButtons = (e) => {
+        e.stopPropagation();
+        setShowMenuButtons(!showMenuButtons);
+    }
     return (
         <div className={`ToDoListItem ToDoListItemSubTask ${done ? `done` : null} ${important ? `important_wrapper` : null}`} >
             <div className="ToDoListItem__leftBlock">
@@ -55,7 +60,12 @@ const ToDoListItemSubTaskItem = ({ done, important, date, time, label, id, taskI
                 </IconButton>
                 {label}
             </div>
-            <div className="ToDoListItem__buttons">
+
+            <IconButton className="list__buttonMenu ToDoListItem__button_menu" aria-controls="simple-menu" aria-haspopup="true" onClick={toggleMenuButtons}>
+                <MoreVertIcon />
+            </IconButton>
+
+            <div className={`ToDoListItem__buttons ${showMenuButtons ? `ToDoListItem__buttons_mobile` : null}`}>
                 <DatePicker eventSaveDateOrTime={onSaveDateOrTime} date={date ? date : null} time={time ? time : null} />
                 <IconButton className={`ToDoListItem__button ToDoListItem__button_marginRight ${important ? `important` : ``}`} onClick={onClickImportant} color="inherit" aria-label="edit">
                     <StarIcon fontSize="medium" />

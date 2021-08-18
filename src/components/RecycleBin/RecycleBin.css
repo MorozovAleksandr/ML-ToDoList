@@ -17,3 +17,19 @@
 .RecycleBin_back:hover {
     background: rgba(0, 0, 0, 0.2);
 }
+
+
+@media (max-width: 768px) {
+    .RecycleBinGroupItemAction {
+        flex-direction: column;
+    }
+
+    .RecycleBinGroupItemAction .MuiButtonBase-root {
+        padding: 3px !important;
+    }
+
+    .RecycleBinGroupItem {
+        grid-template-columns: 1fr 120px 30px !important;
+        grid-gap: 10px;
+    }
+}

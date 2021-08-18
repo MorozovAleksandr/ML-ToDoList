@@ -19,7 +19,15 @@
     margin: 5px 0;
 }
 
-.RecycleBinGroupItemPath .addToDoItem__button {
+.RecycleBinGroupItemPath__button {
     min-width: 125px;
     padding: 6px 12px !important;
+    text-transform: none;
+    background: rgba(0, 0, 0, 0.1) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-transform: none !important;
+}
+
+.RecycleBinGroupItemPath__button:hover {
+    background: rgba(0, 0, 0, 0.2) !important;
 }

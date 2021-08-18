@@ -139,3 +139,63 @@
     display: flex;
     flex-direction: row;
 }
+
+.DatePicker {
+    grid-area: date;
+}
+
+.ToDoListItem__button_important {
+    grid-area: important;
+}
+
+.ToDoListItem__button_edit {
+    grid-area: edit;
+}
+
+.ToDoListItem__button_delete {
+    grid-area: delete;
+}
+
+.ToDoListItem__button_menu {
+    display: none !important;
+}
+
+.todolist__close-wrapper {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .ToDoListItem__buttons {
+        display: none;
+        position: absolute;
+        background-color: rgba(24, 24, 24, 0.99);
+        flex-direction: column;
+        top: 60px;
+        right: 0;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .ToDoListItem__buttons_mobile {
+        display: grid;
+        grid-gap: 10px;
+        z-index: 9;
+        grid-template-areas: "date date date"
+            "important edit delete";
+    }
+
+    .ToDoListItem__button_menu {
+        display: block !important;
+        z-index: 7;
+    }
+
+    .todolist__close-wrapper_mobile {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 6;
+    }
+}
