@@ -90,7 +90,7 @@ const updateActiveListBeforeDelete = (activeToDoListId, id) => {
 const addTask = (state, label) => {
     const [idxList, beforeList, afterList] = getBeforeAfterIdx(state.lists, state.activeToDoListId);
 
-    if (state.lists[idxList].toDoList.length >= 40) {
+    if (state.lists[idxList].toDoList.length >= 55) {
         return state.lists;
     }
 

@@ -11,6 +11,7 @@ import { updateActiveTodoListIdAC, deleteToDoListAC, updateToDoListLabelAC } fro
 import EditForm from "../../EditForm/EditForm";
 
 const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, updateToDoListLabelAC, deleteToDoListAC }) => {
+
     const [anchorEl, setAnchorEl] = useState(null);
     const [showFormEditListItem, setShowFormEditListItem] = useState(false);
 
@@ -73,8 +74,8 @@ const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, up
                         onClose={handleClose}
                         TransitionComponent={Fade}
                     >
-                        <MenuItem onClick={onClickEditItem}>Редактировать</MenuItem>
-                        <MenuItem onClick={onClickDeleteItem}>Удалить</MenuItem>
+                        <MenuItem className="ListItem_edit" onClick={onClickEditItem}>Редактировать</MenuItem>
+                        <MenuItem className="ListItem_delete" onClick={onClickDeleteItem}>Удалить</MenuItem>
                     </Menu>
                 </div>
             </ListItem>
