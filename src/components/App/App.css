@@ -127,6 +127,7 @@ body {
     }
 
     .RecycleBin_back {
-        right: 15px;
+        right: 20px;
+        top: 20px;
     }
 }

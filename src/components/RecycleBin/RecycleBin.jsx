@@ -2,15 +2,15 @@ import React from 'react';
 import './RecycleBin.css';
 import { NavLink } from 'react-router-dom';
 import RecycleBinGroup from './RecycleBinGroup/RecycleBinGroup';
-import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const RecycleBin = () => {
     return (
         <div className="RecycleBin">
             <NavLink to="/">
-                <Typography className="RecycleBin_back" variant="h4" gutterBottom>
+                <Button className="RecycleBin_back" variant="contained" color="primary">
                     Назад
-                </Typography>
+                </Button>
             </NavLink>
 
             <RecycleBinGroup />

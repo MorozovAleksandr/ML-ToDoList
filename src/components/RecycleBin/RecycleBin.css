@@ -4,14 +4,13 @@
 }
 
 .RecycleBin_back {
-    position: absolute;
-    right: 30px;
-    top: 30px;
-    background: rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
+    position: absolute !important;
+    right: 35px;
+    top: 46px;
+    background: #3CE6B0 !important;
     border-radius: 10px;
     cursor: pointer;
-    color: white;
+    color: black !important;
 }
 
 .RecycleBin_back:hover {

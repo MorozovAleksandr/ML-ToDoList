@@ -64,14 +64,15 @@ class ToDoList extends React.PureComponent {
                 {
                     this.state.toDoList.length > 0 &&
                     <div className="todolist__counts">
-                        <div className="todolist__counts__item">Осталось <span className="todolist__counts__item_count">{toDoCount}</span></div>
-                        <div className="todolist__counts__item">Выполнено <span className="todolist__counts__item_count">{doneCount}</span></div>
+                        <div className="todolist__counts__item">Осталось <span className="todolist__counts__item_count">{toDoCount}</span> {(toDoCount === 1 || toDoCount === 21 || toDoCount === 31 || toDoCount === 41) ? `задача` : ((toDoCount > 1 && toDoCount < 5) || (toDoCount > 21 && toDoCount < 25) || (toDoCount > 31 && toDoCount < 35)) ? `задачи` : `задач`}</div>
+                        <div className="todolist__counts__item">Выполнено <span className="todolist__counts__item_count">{doneCount}</span> {(doneCount === 1 || doneCount === 21 || doneCount === 31 || doneCount === 41) ? `задача` : ((doneCount > 1 && doneCount < 5) || (doneCount > 21 && doneCount < 25) || (doneCount > 31 && doneCount < 35)) ? `задачи` : `задач`}</div>
                     </div>
                 }
+
+                <AddToDoItem />
                 <div className="todolist__list">
                     {elements}
                 </div>
-                <AddToDoItem />
                 {
                     this.state.editToDoListItemId &&
                     <EditForm initialLabel={editToDoListItem.label} title={this.props.activeToDoList.label} text="Задача" eventSave={this.onSaveEditListItem} eventClose={this.onCloseEditListItem} />

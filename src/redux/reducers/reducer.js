@@ -90,7 +90,7 @@ const updateActiveListBeforeDelete = (activeToDoListId, id) => {
 const addTask = (state, label) => {
     const [idxList, beforeList, afterList] = getBeforeAfterIdx(state.lists, state.activeToDoListId);
 
-    if (state.lists[idxList].toDoList.length >= 55) {
+    if (state.lists[idxList].toDoList.length >= 40) {
         return state.lists;
     }
 
@@ -212,12 +212,12 @@ const workWithSubTask = ({ lists, activeToDoListId, recycleBin }, id, taskId, pr
     const [idxTask, beforeTask, afterTask] = getBeforeAfterIdx(lists[idxList].toDoList, taskId);
     const [idxSubTask, beforeSubTask, afterSubTask] = getBeforeAfterIdx(lists[idxList].toDoList[idxTask].subtask, id);
 
-    const oldSubTask = lists[idxList].toDoList[idxTask].subtask[idxSubTask]; // старая подзадача
-    let newSubTask; // новая подзадача, обновили свойство
+    const oldSubTask = lists[idxList].toDoList[idxTask].subtask[idxSubTask];
+    let newSubTask;
     let updateTask;
 
-    if (property) { // если нужно заменить свойство подзадачи
-        newSubTask = { ...oldSubTask, [property]: !oldSubTask[property] }; // новая подзадача, обновили свойство
+    if (property) {
+        newSubTask = { ...oldSubTask, [property]: !oldSubTask[property] };
         updateTask = {
             ...lists[idxList].toDoList[idxTask],
             subtask: [
@@ -230,8 +230,8 @@ const workWithSubTask = ({ lists, activeToDoListId, recycleBin }, id, taskId, pr
         };
     }
 
-    if (label) { // если нужно изменить label подзадачи
-        newSubTask = { ...oldSubTask, label: label }; // новая подзадача, обновили label
+    if (label) {
+        newSubTask = { ...oldSubTask, label: label };
         updateTask = {
             ...lists[idxList].toDoList[idxTask],
             subtask: [
@@ -244,7 +244,7 @@ const workWithSubTask = ({ lists, activeToDoListId, recycleBin }, id, taskId, pr
         };
     }
 
-    if (!label && !property) { // если нужно удалить подзадачу
+    if (!label && !property) {
         if (recycleBin.lists.length + recycleBin.tasks.length + recycleBin.subtasks.length >= 30) {
             return lists;
         }

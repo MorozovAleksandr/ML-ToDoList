@@ -44,18 +44,14 @@ test('Проверка добавления списка', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
-    // создаём тестовую версию компонента
     const component = mount(
         <Provider store={store}><Lists /></Provider>
     )
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-    // Ищем кнопку и кликаем
     component.find('.lists__addListButton').simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
     const inputName = component.find('.MuiInputBase-input');
@@ -76,24 +72,18 @@ test('Проверка удаления списка', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
-    // создаём тестовую версию компонента
     const component = mount(
         <Provider store={store}><Lists /></Provider>
     )
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-    // Ищем кнопку и кликаем
     component.find('.list__buttonMenu').at(0).simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-    // Ищем кнопку и кликаем
     component.find('.ListItem_delete').at(0).simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 });
 
@@ -103,24 +93,18 @@ test('Проверка изменения списка', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
-    // создаём тестовую версию компонента
     const component = mount(
         <Provider store={store}><Lists /></Provider>
     )
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-    // Ищем кнопку и кликаем
     component.find('.list__buttonMenu').at(0).simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-    // Ищем кнопку и кликаем
     component.find('.ListItem_edit').at(0).simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
     const inputName = component.find('.MuiInputBase-input').at(0);
@@ -159,28 +143,21 @@ test('Проверка добавления Задачи', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState2);
 
-    // создаём тестовую версию компонента
     const component = mount(
         <Provider store={store}><AddToDoItem /></Provider>
     )
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-
-    // Ищем инпут и меняем значение
     const inputName = component.find('.addToDoItem__input').at(0);
     inputName.getDOMNode().value = "Новая задача";
     inputName.simulate('change');
     expect(inputName.getDOMNode().value).toEqual("Новая задача");
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-    // ищем кнопку и кликаем
     component.find('.addToDoItem__button').at(0).simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 });
 
@@ -200,18 +177,13 @@ test('Проверка удаления Задачи', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState2);
 
-    // создаём тестовую версию компонента
     const component = mount(
         <Provider store={store}><ToDoListItem key={task.id} item={task} /></Provider>
     )
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 
-
-    // Ищем кнопку и кликаем
     component.find('.ToDoListItem__button_delete').at(0).simulate('click');
 
-    // получаем снэпшот (HTML-снимок) компонента для сверки, что вёрстка не испортилась
     expect(toJson(component)).toMatchSnapshot();
 });
