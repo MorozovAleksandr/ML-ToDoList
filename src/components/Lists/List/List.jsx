@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { updateActiveTodoListIdAC, deleteToDoListAC, updateToDoListLabelAC } from '../../../redux/action/action';
 import EditForm from "../../EditForm/EditForm";
 
-const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, updateToDoListLabelAC, deleteToDoListAC }) => {
+const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, updateToDoListLabelAC, deleteToDoListAC, activeToDoListId }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [showFormEditListItem, setShowFormEditListItem] = useState(false);
@@ -49,6 +49,7 @@ const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, up
 
     const updateActiveList = (e) => {
         toggleDrawer(false)(e);
+        if (activeToDoListId === id) return;
         updateActiveTodoListIdAC(id);
     }
 
@@ -88,10 +89,16 @@ const List = ({ needsDone, label, id, toggleDrawer, updateActiveTodoListIdAC, up
     )
 }
 
+const mapStateToProps = ({ activeToDoListId }) => {
+    return {
+        activeToDoListId
+    }
+}
+
 const mapDispatchToProps = {
     updateToDoListLabelAC,
     updateActiveTodoListIdAC,
     deleteToDoListAC
 }
 
-export default connect(null, mapDispatchToProps)(React.memo(List));
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(List));

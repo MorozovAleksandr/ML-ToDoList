@@ -1,0 +1,12 @@
+.ToDoListFiltersChipsItem {
+    color: white !important;
+    margin: 5px;
+    background-color: rgba(75, 75, 75, 0.5) !important;
+    height: 28px !important;
+}
+
+.ToDoListFiltersChipsItem .MuiChip-deleteIconColorPrimary {
+    color: whitesmoke !important;
+    width: 18px !important;
+    height: 18px !important;
+}

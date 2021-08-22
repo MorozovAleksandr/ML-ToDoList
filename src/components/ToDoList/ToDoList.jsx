@@ -6,6 +6,7 @@ import { updatingEditedTaskAC } from "../../redux/action/action";
 import { myEvents } from '../../events';
 import { connect } from "react-redux";
 import EditForm from "../EditForm/EditForm";
+import ToDoListFilters from "./ToDoListFilters/ToDoListFilters";
 
 class ToDoList extends React.PureComponent {
 
@@ -51,10 +52,48 @@ class ToDoList extends React.PureComponent {
         });
     }
 
+    getElemetnsAfterFilters = () => {
+        let includedFilters = [];
+        let initialElements = [...this.state.toDoList];
+        let finalElements = [];
+        this.props.filters.forEach(item => {
+            if (item.status) {
+                includedFilters.push(item);
+            }
+        })
+        if (includedFilters.length) {
+            includedFilters.forEach(filter => {
+                initialElements.forEach((task) => {
+                    if (filter.filter === "done" && task.done) {
+                        finalElements.push(task);
+                    }
+
+                    if (filter.filter === "toDone" && !task.done) {
+                        finalElements.push(task);
+                    }
+
+                    if (filter.filter === "important" && task.important) {
+                        finalElements.push(task);
+                    }
+
+                    if (filter.filter === "notImportant" && !task.important) {
+                        finalElements.push(task);
+                    }
+                })
+            })
+            const uniqueSet = new Set(finalElements);
+            const uniqueFinalElements = [...uniqueSet];
+            return uniqueFinalElements.map(item => <ToDoListItem key={item.id} item={item} />);
+        } else {
+            return this.state.toDoList.map(item => <ToDoListItem key={item.id} item={item} />);
+        }
+
+    }
+
     render() {
         const doneCount = this.state.toDoList.filter(el => el.done).length;
         const toDoCount = this.state.toDoList.length - doneCount;
-        const elements = this.state.toDoList.map(item => <ToDoListItem key={item.id} item={item} />);
+        const elements = this.getElemetnsAfterFilters();
         const editToDoListItem = this.state.toDoList.find(item => item.id === this.state.editToDoListItemId);
         return (
             <div className="todolist">
@@ -64,11 +103,11 @@ class ToDoList extends React.PureComponent {
                 {
                     this.state.toDoList.length > 0 &&
                     <div className="todolist__counts">
-                        <div className="todolist__counts__item">Осталось <span className="todolist__counts__item_count">{toDoCount}</span> {(toDoCount === 1 || toDoCount === 21 || toDoCount === 31 || toDoCount === 41) ? `задача` : ((toDoCount > 1 && toDoCount < 5) || (toDoCount > 21 && toDoCount < 25) || (toDoCount > 31 && toDoCount < 35)) ? `задачи` : `задач`}</div>
+                        <div className="todolist__counts__item">{`${toDoCount === 1 ? `Осталась` : `Осталось`}`} <span className="todolist__counts__item_count">{toDoCount}</span> {(toDoCount === 1 || toDoCount === 21 || toDoCount === 31 || toDoCount === 41) ? `задача` : ((toDoCount > 1 && toDoCount < 5) || (toDoCount > 21 && toDoCount < 25) || (toDoCount > 31 && toDoCount < 35)) ? `задачи` : `задач`}</div>
                         <div className="todolist__counts__item">Выполнено <span className="todolist__counts__item_count">{doneCount}</span> {(doneCount === 1 || doneCount === 21 || doneCount === 31 || doneCount === 41) ? `задача` : ((doneCount > 1 && doneCount < 5) || (doneCount > 21 && doneCount < 25) || (doneCount > 31 && doneCount < 35)) ? `задачи` : `задач`}</div>
                     </div>
                 }
-
+                <ToDoListFilters />
                 <AddToDoItem />
                 <div className="todolist__list">
                     {elements}
@@ -82,6 +121,11 @@ class ToDoList extends React.PureComponent {
     }
 }
 
+const mapStateToProps = ({ filters }) => {
+    return {
+        filters
+    }
+}
 
 const mapDispatchToProps = {
     updatingEditedTaskAC
@@ -89,4 +133,4 @@ const mapDispatchToProps = {
 
 
 
-export default connect(null, mapDispatchToProps)(ToDoList);
+export default connect(mapStateToProps, mapDispatchToProps)(ToDoList);

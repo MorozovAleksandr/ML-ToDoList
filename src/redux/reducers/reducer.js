@@ -1,6 +1,33 @@
 
 import crypto from "crypto";
 
+const initialFilters = [
+    {
+        id: 0,
+        filter: "important",
+        status: false,
+        title: "Важные"
+    },
+    {
+        id: 1,
+        filter: "notImportant",
+        status: false,
+        title: "Не важные"
+    },
+    {
+        id: 2,
+        filter: "toDone",
+        status: false,
+        title: "Нужно сделать"
+    },
+    {
+        id: 3,
+        filter: "done",
+        status: false,
+        title: "Выполненные"
+    }
+];
+
 const initialState = {
     user: false,
     loading: true,
@@ -15,7 +42,8 @@ const initialState = {
         status: false,
         text: '',
         color: ''
-    }
+    },
+    filters: initialFilters
 }
 
 const getBeforeAfterIdx = (items, id) => {
@@ -85,6 +113,10 @@ const deleteToDoList = (lists, id, recycleBin) => {
 
 const updateActiveListBeforeDelete = (activeToDoListId, id) => {
     return activeToDoListId === id ? null : activeToDoListId;
+}
+
+const updateFiltersBeforeDeleteList = (activeToDoListId, id, filters) => {
+    return activeToDoListId === id ? initialFilters : filters;
 }
 
 const addTask = (state, label) => {
@@ -465,6 +497,32 @@ const updateNotification = (recycleBin, notification) => {
     return notification;
 }
 
+const getBeforeAfterIdxFilter = (items, filter) => {
+    const idx = items.findIndex(item => item.filter === filter);
+    const b = items.slice(0, idx);
+    const a = items.slice(idx + 1);
+    return [idx, b, a];
+}
+
+const updateFilters = (filters, filter, falseStatus = false) => {
+    const [idxFilter, beforeFilter, afterFilter] = getBeforeAfterIdxFilter(filters, filter);
+    let updateFilter;
+
+    if (falseStatus) {
+        updateFilter = { ...filters[idxFilter], status: false };
+    } else {
+        if (filter === "important") {
+
+        }
+        updateFilter = { ...filters[idxFilter], status: !filters[idxFilter].status };
+    }
+
+    const updateFilters = [...beforeFilter, updateFilter, ...afterFilter];
+
+    return updateFilters;
+}
+
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case "UPDATE_USER": {
@@ -484,7 +542,8 @@ const reducer = (state = initialState, action) => {
         case "UPDATE_ACTIVE_TODO_LIST_ID": {
             return {
                 ...state,
-                activeToDoListId: action.payload
+                activeToDoListId: action.payload,
+                filters: initialFilters
             }
         }
 
@@ -501,7 +560,8 @@ const reducer = (state = initialState, action) => {
                 lists: deleteToDoList(state.lists, action.id, state.recycleBin),
                 activeToDoListId: updateActiveListBeforeDelete(state.activeToDoListId, action.id),
                 recycleBin: addItemToRecycleBin(state, action.id, "list"),
-                notifacation: updateNotification(state.recycleBin, state.notifacation)
+                notifacation: updateNotification(state.recycleBin, state.notifacation),
+                filters: updateFiltersBeforeDeleteList(state.activeToDoListId, action.id, state.filters)
             }
         }
 
@@ -643,6 +703,20 @@ const reducer = (state = initialState, action) => {
                     text: '',
                     color: 'success'
                 }
+            }
+        }
+
+        case "TOGGLE_FILTER": {
+            return {
+                ...state,
+                filters: updateFilters(state.filters, action.filter)
+            }
+        }
+
+        case "OFF_FILTER": {
+            return {
+                ...state,
+                filters: updateFilters(state.filters, action.filter, true)
             }
         }
 

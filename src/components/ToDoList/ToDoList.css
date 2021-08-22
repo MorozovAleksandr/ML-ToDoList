@@ -9,10 +9,10 @@
 }
 
 .todolist__list {
-    padding: 30px;
+    padding: 0 30px 30px 30px;
     display: flex;
     flex-direction: column;
-    margin-bottom: 70px;
+    /* margin-bottom: 70px; */
 }
 
 .todolist__counts {

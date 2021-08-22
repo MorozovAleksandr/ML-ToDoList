@@ -157,6 +157,21 @@ const clearNotificationAC = () => {
     }
 }
 
+const toggleFilterAC = (filter) => {
+    return {
+        type: "TOGGLE_FILTER",
+        filter
+    }
+}
+
+const offFilterAC = (filter) => {
+    return {
+        type: "OFF_FILTER",
+        filter
+    }
+}
+
+
 export {
     addToDoListAC,
     updateToDoListLabelAC,
@@ -177,5 +192,7 @@ export {
     restoreItemAC,
     updateItemInRecycleBinAC,
     destroyItemAC,
-    clearNotificationAC
+    clearNotificationAC,
+    toggleFilterAC,
+    offFilterAC
 }

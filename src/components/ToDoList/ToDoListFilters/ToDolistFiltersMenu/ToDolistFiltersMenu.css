@@ -1,0 +1,49 @@
+.ToDolistFiltersMenuItems {
+    display: none;
+}
+
+.ToDolistFiltersMenuItems_show {
+    display: block;
+    position: absolute;
+    background: rgba(24, 24, 24, 0.99);
+    z-index: 41;
+}
+
+.closeMenu {
+    display: none;
+}
+
+.closeMenu_show {
+    display: block;
+    position: absolute;
+    left: -280px;
+    top: 0;
+    width: 100vw;
+    height: 100%;
+    z-index: 41;
+}
+
+.ToDolistFiltersMenu_button {
+    background-color: #3CE6B0 !important;
+    color: black !important;
+}
+
+.ToDolistFiltersMenu_button .MuiButton-label {
+
+    display: flex;
+    align-items: center;
+}
+
+.ToDolistFiltersMenu_icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .closeMenu_show {
+        left: 0;
+        top: -75px;
+        height: 99vh;
+    }
+}

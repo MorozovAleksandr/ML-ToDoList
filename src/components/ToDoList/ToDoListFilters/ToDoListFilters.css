@@ -1,0 +1,12 @@
+.ToDoListFilters {
+    padding: 30px 30px 0px 30px;
+    display: grid;
+    grid-template-columns: 129px 1fr;
+    grid-gap: 10px;
+}
+
+@media (max-width: 500px) {
+    .ToDoListFilters {
+        padding: 30px 15px 0px 15px;
+    }
+}
