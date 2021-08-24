@@ -8,4 +8,5 @@
     height: 40px !important;
     fill: #3CE6B0 !important;
     padding: 12px;
+    box-sizing: unset !important;
 }

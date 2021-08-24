@@ -1,6 +1,7 @@
 .lists {
     background-color: rgb(50, 50, 50);
     padding: 30px;
+    padding-top: 15px;
     transition: all 0.2s ease-out;
 
     z-index: 40;
@@ -9,7 +10,14 @@
 .lists__title {
     margin: 0;
     margin-bottom: 8px;
-    font-size: 26px;
+    color: white;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+.lists__title span {
+    margin-left: 11px;
 }
 
 .lists__addListButton {
@@ -88,6 +96,40 @@
     top: -10px;
 }
 
+.lists_main {
+    padding: 15px 0;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+.lists_main:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.lists_main:hover .MuiSvgIcon-root {
+    fill: #3CE6B0;
+}
+
+
+.lists_main .MuiSvgIcon-root {
+    width: 21px !important;
+    height: 21px !important;
+}
+
+
+
+.lists__title .MuiSvgIcon-root {
+    width: 19px !important;
+    height: 19px !important;
+}
+
+.lists_main span {
+    margin-left: 10px;
+}
 
 @media (max-width: 768px) {
     .lists {

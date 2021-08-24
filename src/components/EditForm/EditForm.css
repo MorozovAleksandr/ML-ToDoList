@@ -10,6 +10,11 @@
     color: white;
 }
 
+
+.EditToDoListItem__title h2 {
+    color: white;
+}
+
 .saveButton {
     background-color: #3CE6B0 !important;
     color: black !important;

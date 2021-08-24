@@ -17,7 +17,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { connect } from "react-redux";
 import { Fragment } from "react";
 
-const ToDoListItem = ({ item, togglePropertyTaskAC, deleteTaskAC, updateDateOrTimeTaskAC }) => {
+const ToDoListItem = ({ item, togglePropertyTaskAC, deleteTaskAC, updateDateOrTimeTaskAC, renderEdit = true }) => {
 
     const [showMenuButtons, setShowMenuButtons] = useState(false);
 

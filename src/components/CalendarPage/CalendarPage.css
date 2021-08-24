@@ -1,0 +1,102 @@
+.calendarDay:hover {
+    background-color: #434343 !important;
+}
+
+.ant-picker-cell-selected .calendarDay {
+    background: #3CE6B0 !important;
+    color: black;
+}
+
+.Calendar {
+    max-width: 500px;
+    margin: 0 auto !important;
+
+    border-radius: 5px;
+}
+
+.Calendar .ant-radio-group {
+    display: none;
+}
+
+.ant-picker-calendar {
+    background-color: #212121 !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    border: 0 !important;
+    box-shadow: 0 0 20px rgb(0 0 0 / 30%);
+}
+
+.Calendar .ant-select-selector {
+    background-color: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid #434343 !important;
+    border-radius: 2px !important;
+    transition: all .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.ant-select {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.ant-select-arrow {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.ant-picker-calendar .ant-picker-panel {
+    background: #212121 !important;
+    border: 0;
+    border-top: 1px solid #303030 !important;
+}
+
+.ant-picker-cell::before {
+    position: unset !important;
+}
+
+.Calendar .ant-radio-button-wrapper {
+    color: rgba(255, 255, 255, 0.65) !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid #434343 !important;
+}
+
+.Calendar .ant-radio-button-wrapper-checked {
+    border: 0 !important;
+    border-bottom: 1px solid #3CE6B0 !important;
+}
+
+.ant-radio-button-wrapper:not(:first-child)::before {
+    display: none !important;
+}
+
+.activeCalendarDay {
+    background-color: #434343 !important;
+    color: white;
+}
+
+.ant-picker-content th {
+    color: whitesmoke !important;
+}
+
+.ant-picker-cell {
+    color: grey !important;
+}
+
+
+.ant-picker-cell-in-view {
+    color: whitesmoke !important;
+}
+
+
+.CalendarPage {
+    padding: 30px;
+}
+
+.CalendarPage__title {
+    padding-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .CalendarPage {
+        margin-top: 75px;
+        border-top: 1px solid grey;
+    }
+}

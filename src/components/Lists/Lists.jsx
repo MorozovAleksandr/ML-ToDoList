@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import IconButton from '@material-ui/core/IconButton';
-import { addToDoListAC } from '../../redux/action/action';
+import { addToDoListAC, updateActiveTodoListIdAC } from '../../redux/action/action';
 import { connect } from "react-redux";
 import EditForm from "../EditForm/EditForm";
 import List from './List/List';
 import './Lists.css'
 import crypto from "crypto";
+import HomeIcon from '@material-ui/icons/Home';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import { Fragment } from "react";
 
-const Lists = ({ lists, addToDoListAC }) => {
+const Lists = ({ lists, addToDoListAC, updateActiveTodoListIdAC }) => {
 
     const [showFormAddList, setShowFormAddList] = useState(false);
 
@@ -52,6 +54,11 @@ const Lists = ({ lists, addToDoListAC }) => {
         onCloseAddListForm();
     }
 
+    const updateActiveToDoListId = () => {
+        setOpenNav(false);
+        updateActiveTodoListIdAC(null);
+    }
+
     const myLists = lists.map(item => {
         let needsDone = 0;
         item.toDoList.forEach(task => {
@@ -73,7 +80,16 @@ const Lists = ({ lists, addToDoListAC }) => {
                     <span className="second"></span>
                     <span className="third"></span>
                 </label>
-                <h1 className="lists__title">Списки:</h1>
+                <h1 className="lists_main" onClick={updateActiveToDoListId}>
+                    <HomeIcon />
+                    <span>Главная</span>
+                </h1>
+                <h2 className="lists__title">
+                    <FormatListBulletedIcon />
+                    <span>
+                        Списки:
+                    </span>
+                </h2>
                 {myLists}
                 <div className="lists__addListButton" onClick={onClickAddList} >
                     <IconButton color="inherit" aria-label="add List">
@@ -98,7 +114,8 @@ const mapStateToProps = ({ lists }) => {
 }
 
 const mapDispatchToProps = {
-    addToDoListAC
+    addToDoListAC,
+    updateActiveTodoListIdAC
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Lists));

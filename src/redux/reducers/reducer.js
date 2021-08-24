@@ -16,15 +16,15 @@ const initialFilters = [
     },
     {
         id: 2,
-        filter: "toDone",
-        status: false,
-        title: "Нужно сделать"
-    },
-    {
-        id: 3,
         filter: "done",
         status: false,
         title: "Выполненные"
+    },
+    {
+        id: 3,
+        filter: "toDone",
+        status: false,
+        title: "Не выполненные"
     }
 ];
 

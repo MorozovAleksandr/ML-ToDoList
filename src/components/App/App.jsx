@@ -20,6 +20,7 @@ import 'firebase/database';
 import "./App.css";
 import RecycleBinButton from "../RecycleBinButton/RecycleBinButton.jsx";
 import Notification from "../Notification/Notification.jsx";
+import CalendarPage from "../CalendarPage/CalendarPage.jsx";
 
 const initialRecycleBin = {
     lists: [],
@@ -139,6 +140,7 @@ class App extends React.PureComponent {
                 <Route path="/signup" component={Registration} />
                 <Route path="/recyclebin" component={RecycleBin} />
                 <Route path="/updatepassword" component={UpdatePassword} />
+                <Route path="/calendar" component={CalendarPage} />
                 <Route path="/" exact render={() =>
                     <div>
                         <div className="sideMenu">
@@ -151,6 +153,11 @@ class App extends React.PureComponent {
                             {
                                 this.props.activeToDoListId &&
                                 <ToDoList activeToDoList={this.props.lists.find(item => item.id === this.props.activeToDoListId)} />
+                            }
+
+                            {
+                                !this.props.activeToDoListId &&
+                                <CalendarPage />
                             }
                         </div>
                     </div>
