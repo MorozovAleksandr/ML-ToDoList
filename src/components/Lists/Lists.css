@@ -152,6 +152,8 @@
     .lists_mobile {
         left: 0;
         width: 280px;
+        max-height: 100vh;
+        overflow-x: scroll;
     }
 
     .lists__close-wrapper_mobile {
