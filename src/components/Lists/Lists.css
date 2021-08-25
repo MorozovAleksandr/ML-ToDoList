@@ -132,6 +132,14 @@
 }
 
 @media (max-width: 768px) {
+    .lists__renderList {
+        display: none;
+    }
+
+    .lists__renderList_mobile {
+        display: block;
+    }
+
     .lists {
         position: absolute;
         left: -280px;
@@ -152,7 +160,7 @@
     .lists_mobile {
         left: 0;
         width: 280px;
-        max-height: 100vh;
+        min-height: 100vh;
         overflow-x: scroll;
     }
 
@@ -161,7 +169,8 @@
         z-index: 10;
         display: block;
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
+        height: 100%;
         left: 0;
         top: 0;
         background-color: rgba(0, 0, 0, 0.5);

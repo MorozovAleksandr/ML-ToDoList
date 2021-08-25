@@ -73,6 +73,8 @@ h1 {
 
     .lists {
         height: 100%;
+        /* min-height: 100vh;
+        overflow-x: scroll; */
     }
 
     .lists__wrapper .MuiDrawer-paper {
@@ -89,7 +91,7 @@ h1 {
     }
 
     .todolist__list {
-        margin-bottom: 100px;
+        margin-bottom: 0;
     }
 }
 

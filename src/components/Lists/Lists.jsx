@@ -90,7 +90,9 @@ const Lists = ({ lists, addToDoListAC, updateActiveTodoListIdAC }) => {
                         Списки:
                     </span>
                 </h2>
-                {myLists}
+                <div className={`lists__renderList ${openNav ? `lists__renderList_mobile` : null}`}>
+                    {myLists}
+                </div>
                 <div className="lists__addListButton" onClick={onClickAddList} >
                     <IconButton color="inherit" aria-label="add List">
                         <PlaylistAddIcon fontSize="medium" />
