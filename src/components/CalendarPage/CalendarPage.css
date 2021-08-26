@@ -2,6 +2,11 @@
     background-color: #434343 !important;
 }
 
+.calendarDay {
+
+    margin: 0 3px;
+}
+
 .ant-picker-cell-selected .calendarDay {
     background: #3CE6B0 !important;
     color: black;
