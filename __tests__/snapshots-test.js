@@ -38,9 +38,8 @@ const newList = {
     label: 'Мой новый список'
 }
 
-test('Проверка добавления списка', () => {
+test('Checking adding a list', () => {
 
-    //redux-mock-store
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
@@ -66,9 +65,8 @@ test('Проверка добавления списка', () => {
     expect(toJson(component)).toMatchSnapshot();
 });
 
-test('Проверка удаления списка', () => {
+test('Checking the deletion of a list', () => {
 
-    //redux-mock-store
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
@@ -87,9 +85,8 @@ test('Проверка удаления списка', () => {
     expect(toJson(component)).toMatchSnapshot();
 });
 
-test('Проверка изменения списка', () => {
+test('Checking the list change', () => {
 
-    //redux-mock-store
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
@@ -138,8 +135,8 @@ const initialState2 = {
     }
 }
 
-test('Проверка добавления Задачи', () => {
-    //redux-mock-store
+test('Checking whether a Task has been added', () => {
+
     const mockStore = configureStore();
     const store = mockStore(initialState2);
 
@@ -161,7 +158,7 @@ test('Проверка добавления Задачи', () => {
     expect(toJson(component)).toMatchSnapshot();
 });
 
-test('Проверка удаления Задачи', () => {
+test('Checking the deletion of a Task', () => {
 
     const task = {
         label: "Задача1",
@@ -173,7 +170,6 @@ test('Проверка удаления Задачи', () => {
         id: 13371488
     };
 
-    //redux-mock-store
     const mockStore = configureStore();
     const store = mockStore(initialState2);
 
