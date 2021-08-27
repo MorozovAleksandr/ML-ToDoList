@@ -309,7 +309,6 @@ const addItemToRecycleBin = (state, id, type, taskId = null, property, label) =>
         let updateTasks = [];
         let updateTasksForList = [];
 
-        // Проверяем задачи из корзины, для переноса в лист
         if (tasks.length) {
             tasks.forEach((task) => {
                 if (task.listId === id) {
@@ -323,18 +322,15 @@ const addItemToRecycleBin = (state, id, type, taskId = null, property, label) =>
 
         let updateItem = { ...item, toDoList: [...item.toDoList, ...updateTasksForList] };
 
-        // Проверяем подзадачи из корзины, для переноса в лист
         if (subtasks.length) {
             const searchSubtasks = subtasks.filter(subtask => subtask.listId === id);
             updateItem.toDoList.forEach(task => {
                 searchSubtasks.forEach(subtask => {
                     if (task.id === subtask.taskId) {
-                        //После нахождения нужной таски, добавляем в неё удалённые подзадачи
                         const [idxTask, beforeTask, afterTask] = getBeforeAfterIdx(updateItem.toDoList, task.id);
                         const updateTask = { ...updateItem.toDoList[idxTask], subtask: [...updateItem.toDoList[idxTask].subtask, subtask] };
                         updateItem = { ...updateItem, toDoList: [...beforeTask, updateTask, ...afterTask] };
 
-                        //Обновляем список подзадач в корзине
                         const idxSubtask = subtasks.findIndex(item => item.taskId === task.id);
                         const beforeSubtask = subtasks.slice(0, idxSubtask);
                         const afterSubtask = subtasks.slice(idxSubtask + 1);
